@@ -22,7 +22,7 @@ Este é um aplicativo de nutrição desenvolvido em Flutter. O objetivo é cadas
 
 - [Beatriz Feitosa](https://github.com/beatrizfeitosa)
 - [Denner Freitas](https://github.com/DennerFreit4s)
-- [Hercules Lima](https://github.com/HerculesCorrea)
+- [Hercules Correa](https://github.com/HerculesCorrea)
 - [Jefferson Monteiro](https://github.com/JeffersonlMonteiro)
 - [Raphael Willian](https://github.com/RaphaelWillianBarbosadePaula)
 - [Victor Akahane](https://github.com/victorakahane)
