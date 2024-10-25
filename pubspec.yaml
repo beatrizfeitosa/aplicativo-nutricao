@@ -62,6 +62,13 @@ flutter:
   assets:
     - assets/
     - assets/images/Nutrify.png
+    - assets/images/Aka.png
+    - assets/images/Bia.jpg
+    - assets/images/Denner.png
+    - assets/images/Hercules.png
+    - assets/images/jeff.png
+    - assets/images/Rafa.png
+
 
 
 
