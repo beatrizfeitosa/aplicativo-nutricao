@@ -1,6 +1,9 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:crypto/crypto.dart';
+import 'package:aplicativo_nutricao/data/database_helper.dart';
 import 'package:aplicativo_nutricao/view/CadastroUsuarioPage.dart';
-
+import 'package:aplicativo_nutricao/view/HomePage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,6 +16,42 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  String _calcularHash(String password) {
+    var passwordInBytes = utf8.encode(password);
+    return sha256.convert(passwordInBytes).toString();
+  }
+
+  void _login() async {
+    if (_formKey.currentState!.validate()) {
+      final email = _emailController.text;
+      final senhaHash = _calcularHash(_passwordController.text);
+
+      try {
+        final usuario = await Database.retornaUsuario(email);
+
+        if (usuario.isNotEmpty) {
+          final senhaBanco = usuario.first['senha'];
+          if (senhaBanco == senhaHash) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const HomePage()),
+            );
+          } else {
+            _showSnackBar('Senha incorreta.');
+          }
+        } else {
+          _showSnackBar('Usuário não encontrado.');
+        }
+      } catch (e) {
+        _showSnackBar('Erro ao realizar o login. Tente novamente.');
+      }
+    }
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    'images/Nutrify.png',
+                    'assets/images/Nutrify.png',
                     height: 100,
                   ),
                   const SizedBox(height: 16),
@@ -92,15 +131,10 @@ class _LoginPageState extends State<LoginPage> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.redAccent,
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 80, vertical: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 16),
                       textStyle: const TextStyle(fontSize: 18),
                     ),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        print('Email: ${_emailController.text}, Senha: ${_passwordController.text}');
-                      }
-                    },
+                    onPressed: _login,
                     child: const Text('Entrar'),
                   ),
                   const SizedBox(height: 16),
