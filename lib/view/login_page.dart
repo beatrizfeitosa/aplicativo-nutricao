@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:crypto/crypto.dart';
 import 'package:aplicativo_nutricao/data/database_helper.dart';
-import 'package:aplicativo_nutricao/view/CadastroUsuarioPage.dart';
-import 'package:aplicativo_nutricao/view/HomePage.dart';
+import 'package:aplicativo_nutricao/view/cadastro_usuario_page.dart';
+import 'package:aplicativo_nutricao/view/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -56,6 +56,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFE8FFD5),
       body: Center(
         child: SingleChildScrollView(
           child: Container(
@@ -83,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       'Email',
-                      style: TextStyle(fontSize: 16),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
                   TextFormField(
@@ -91,6 +92,8 @@ class _LoginPageState extends State<LoginPage> {
                     decoration: const InputDecoration(
                       hintText: 'Digite email',
                       border: OutlineInputBorder(),
+                      filled: true,
+                      fillColor: Colors.white,
                     ),
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
@@ -108,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       'Senha',
-                      style: TextStyle(fontSize: 16),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
                   TextFormField(
@@ -116,6 +119,8 @@ class _LoginPageState extends State<LoginPage> {
                     decoration: const InputDecoration(
                       hintText: 'Digite senha',
                       border: OutlineInputBorder(),
+                      filled: true,
+                      fillColor: Colors.white,
                     ),
                     obscureText: true,
                     validator: (value) {

@@ -1,4 +1,4 @@
-import 'package:aplicativo_nutricao/view/HomePage.dart';
+import 'package:aplicativo_nutricao/view/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -57,14 +57,14 @@ class _CreditosPageState extends State<CreditosPage> {
           Row(
             children: [
               Card(
-                margin: const EdgeInsets.fromLTRB(90, 15, 20, 0),
+                margin: const EdgeInsets.fromLTRB(55, 15, 20, 0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
                 clipBehavior: Clip.antiAlias,
                 elevation: 5,
                 child: Image.asset(
-                  'images/Bia.jpg',
+                  'assets/images/Bia.jpg',
                   width: 70,
                   height: 70,
                   fit: BoxFit.cover,
@@ -97,14 +97,14 @@ class _CreditosPageState extends State<CreditosPage> {
           Row(
             children: [
               Card(
-                margin: const EdgeInsets.fromLTRB(90, 15, 20, 0),
+                margin: const EdgeInsets.fromLTRB(55, 15, 20, 0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
                 clipBehavior: Clip.antiAlias,
                 elevation: 5,
                 child: Image.asset(
-                  'images/Denner.png',
+                  'assets/images/Denner.png',
                   width: 70,
                   height: 70,
                   fit: BoxFit.cover,
@@ -137,14 +137,14 @@ class _CreditosPageState extends State<CreditosPage> {
           Row(
             children: [
               Card(
-                margin: const EdgeInsets.fromLTRB(90, 15, 20, 0),
+                margin: const EdgeInsets.fromLTRB(55, 15, 20, 0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
                 clipBehavior: Clip.antiAlias,
                 elevation: 5,
                 child: Image.asset(
-                  'images/Hercules.png',
+                  'assets/images/Hercules.png',
                   width: 70,
                   height: 70,
                   fit: BoxFit.cover,
@@ -177,14 +177,14 @@ class _CreditosPageState extends State<CreditosPage> {
           Row(
             children: [
               Card(
-                margin: const EdgeInsets.fromLTRB(90, 15, 20, 0),
+                margin: const EdgeInsets.fromLTRB(55, 15, 20, 0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
                 clipBehavior: Clip.antiAlias,
                 elevation: 5,
                 child: Image.asset(
-                  'images/jeff.png',
+                  'assets/images/jeff.png',
                   width: 70,
                   height: 70,
                   fit: BoxFit.cover,
@@ -217,14 +217,14 @@ class _CreditosPageState extends State<CreditosPage> {
           Row(
             children: [
               Card(
-                margin: const EdgeInsets.fromLTRB(90, 15, 20, 0),
+                margin: const EdgeInsets.fromLTRB(55, 15, 20, 0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
                 clipBehavior: Clip.antiAlias,
                 elevation: 5,
                 child: Image.asset(
-                  'images/Rafa.png',
+                  'assets/images/raphael.jpeg',
                   width: 70,
                   height: 70,
                   fit: BoxFit.cover,
@@ -244,7 +244,7 @@ class _CreditosPageState extends State<CreditosPage> {
                     ),
                   ),
                   Text(
-                    'Tela de Login',
+                    'Tela de Login e Cadastro de Usuário',
                     style: GoogleFonts.inter(
                       fontSize: 12,
                       color: Colors.black,
@@ -257,14 +257,14 @@ class _CreditosPageState extends State<CreditosPage> {
           Row(
             children: [
               Card(
-                margin: const EdgeInsets.fromLTRB(90, 15, 20, 0),
+                margin: const EdgeInsets.fromLTRB(55, 15, 20, 0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
                 clipBehavior: Clip.antiAlias,
                 elevation: 5,
                 child: Image.asset(
-                  'images/Aka.png',
+                  'assets/images/Aka.png',
                   width: 70,
                   height: 70,
                   fit: BoxFit.cover,
