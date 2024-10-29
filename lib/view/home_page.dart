@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:aplicativo_nutricao/view/ConsultarPage.dart';
+import 'package:aplicativo_nutricao/view/consultar_page.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:aplicativo_nutricao/view/LoginPage.dart';
-import 'package:aplicativo_nutricao/view/CadastroPage.dart';
-import 'package:aplicativo_nutricao/view/CreditosPage.dart';
+import 'package:aplicativo_nutricao/view/login_page.dart';
+import 'package:aplicativo_nutricao/view/cadastro_page.dart';
+import 'package:aplicativo_nutricao/view/creditos_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               child: Image.asset(
-                'images/Nutrify.png',
+                'assets/images/Nutrify.png',
               ),
             ),
           ),

@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:aplicativo_nutricao/view/LoginPage.dart';
+import 'package:aplicativo_nutricao/view/login_page.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
-import 'package:aplicativo_nutricao/controllers/UsuariosController.dart';
+import 'package:aplicativo_nutricao/controllers/usuarios_controller.dart';
 
 class CadastroUsuarioPage extends StatefulWidget {
   const CadastroUsuarioPage({super.key});
@@ -23,14 +23,7 @@ class _CadastroUsuarioPageState extends State<CadastroUsuarioPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
+      backgroundColor: const Color(0xFFE8FFD5),
       body: Center(
         child: SingleChildScrollView(
           child: Container(
@@ -40,6 +33,15 @@ class _CadastroUsuarioPageState extends State<CadastroUsuarioPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Align(
+                    alignment: Alignment.centerLeft, // Alinha o botão à esquerda
+                    child: IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
                   const Text(
                     "Cadastro",
                     style: TextStyle(
@@ -76,6 +78,8 @@ class _CadastroUsuarioPageState extends State<CadastroUsuarioPage> {
                     decoration: const InputDecoration(
                       hintText: 'Digite seu nome',
                       border: OutlineInputBorder(),
+                      filled: true,
+                      fillColor: Colors.white,
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -99,6 +103,8 @@ class _CadastroUsuarioPageState extends State<CadastroUsuarioPage> {
                     decoration: const InputDecoration(
                       hintText: '__/__/____',
                       border: OutlineInputBorder(),
+                      filled: true,
+                      fillColor: Colors.white,
                     ),
                     keyboardType: TextInputType.datetime,
                     validator: (value) {
@@ -123,6 +129,8 @@ class _CadastroUsuarioPageState extends State<CadastroUsuarioPage> {
                     decoration: const InputDecoration(
                       hintText: 'Digite seu email',
                       border: OutlineInputBorder(),
+                      filled: true,
+                      fillColor: Colors.white,
                     ),
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
@@ -149,6 +157,8 @@ class _CadastroUsuarioPageState extends State<CadastroUsuarioPage> {
                     decoration: const InputDecoration(
                       hintText: 'Digite sua senha',
                       border: OutlineInputBorder(),
+                      filled: true,
+                      fillColor: Colors.white,
                     ),
                     obscureText: true,
                     validator: (value) {
@@ -173,6 +183,8 @@ class _CadastroUsuarioPageState extends State<CadastroUsuarioPage> {
                     decoration: const InputDecoration(
                       hintText: 'Confirme sua senha',
                       border: OutlineInputBorder(),
+                      filled: true,
+                      fillColor: Colors.white,
                     ),
                     obscureText: true,
                     validator: (value) {
