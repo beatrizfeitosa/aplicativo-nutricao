@@ -1,3 +1,4 @@
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 
 class Database {
@@ -22,7 +23,8 @@ class Database {
   categoria TEXT NOT NULL,
   tipo TEXT NOT NULL,
   foto BLOB,
-  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  usuarioId INTEGER,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 )
   """);
   }
@@ -31,6 +33,7 @@ class Database {
     return sql.openDatabase(
       'nutrify.db',
       version: 1,
+      onConfigure: (database) async {},
       onCreate: (sql.Database database, int version) async {
         await createTables(database);
       },
@@ -60,13 +63,15 @@ class Database {
       {required String nome,
       required String categoria,
       required String tipo,
-      required List<int> foto}) async {
+      required int usuarioId,
+      required List<int> imageBytes}) async {
     final database = await Database.database();
     final data = {
       'nome': nome,
       'categoria': categoria,
       'tipo': tipo,
-      'foto': foto,
+      'foto': imageBytes,
+      'usuarioId': usuarioId,
     };
     final id = await database.insert('alimentos', data,
         conflictAlgorithm: sql.ConflictAlgorithm.replace);
@@ -77,6 +82,11 @@ class Database {
     final database = await Database.database();
     return database.query('usuarios',
         where: "email = ?", whereArgs: [email], limit: 1);
+  }
+
+  static Future<List<Map<String, dynamic>>> retornaUsuariosId() async {
+    final database = await Database.database();
+    return database.query('usuarios'); // Retorna todos os usuários
   }
 
   static Future<List<Map<String, dynamic>>> retornaUsuarios() async {

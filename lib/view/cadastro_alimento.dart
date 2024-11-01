@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:aplicativo_nutricao/controllers/alimentos_controller.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CadastroAlimento extends StatefulWidget {
   const CadastroAlimento({Key? key}) : super(key: key);
@@ -215,21 +217,26 @@ class _CadastroAlimentoState extends State<CadastroAlimento> {
                   ),
                   const SizedBox(height: 32),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       String? categoria = _categoriaSelecionada;
                       String? tipo = _tipoSelecionado;
-
-                      //int usuarioId = 
+                      final prefs = await SharedPreferences.getInstance();
+                      final userId = prefs.getInt('userId');
 
                       if (_formKey.currentState!.validate()) {
                         if (categoria != null && tipo != null) {
-                          AlimentosController().cadastrarAlimento(
-                            nome: _nomeController.text,
-                            categoria: categoria, // Passa a categoria selecionada
-                            tipo: tipo, // Passa o tipo selecionado
-                            foto: _imagePath, // Caminho da imagem
-                            //usuarioId: usuario
-                          );
+                          if (userId != null) {
+                            // Chama a função cadastrarAlimento com o userId
+                            await AlimentosController().cadastrarAlimento(
+                              nome: _nomeController.text,
+                              categoria:
+                                  categoria, // Passa a categoria selecionada
+                              tipo: tipo, // Passa o tipo selecionado
+                              foto: _imagePath,
+                              usuarioId:
+                                  userId, // Passa o userId que foi recuperado
+                            );
+                          }
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(

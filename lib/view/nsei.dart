@@ -8,6 +8,7 @@ class AlimentosScreen extends StatefulWidget {
 
 class _AlimentosScreenState extends State<AlimentosScreen> {
   List<Map<String, dynamic>> _alimentos = [];
+  List<Map<String, dynamic>> _usuarios = [];
   bool _isLoading = false;
 
   Future<void> _carregarAlimentos() async {
@@ -20,6 +21,14 @@ class _AlimentosScreenState extends State<AlimentosScreen> {
       _alimentos = alimentos;
       _isLoading = false; // Finaliza o carregamento
     });
+
+    final List<Map<String, dynamic>> usuarios = await Database.retornaUsuariosId();
+setState(() {
+  _usuarios = usuarios; // Aqui você está atribuindo a lista de mapas de usuários
+  _isLoading = false; // Finaliza o carregamento
+});
+
+
   }
 
   @override
@@ -44,10 +53,10 @@ class _AlimentosScreenState extends State<AlimentosScreen> {
                     itemCount: _alimentos.length,
                     itemBuilder: (context, index) {
                       final alimento = _alimentos[index];
+                      final usuario = _usuarios[index];
                       return ListTile(
                         title: Text(alimento['nome'] ?? 'Nome não disponível''Categoria: ${alimento['categoria'] ?? 'Desconhecida'}' 'tipo: ${alimento['tipo'] ?? 'Desconhecida'}'),
-                        
-                        subtitle: Text('fto: ${alimento['foto'] ?? 'Desconhecida'}'),
+                        subtitle: Text('id: ${alimento['usuarioId'] ?? 'SEM ID'}'),
                       );
                     },
                   ),

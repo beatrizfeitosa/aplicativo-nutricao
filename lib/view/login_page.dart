@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:crypto/crypto.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:aplicativo_nutricao/data/database_helper.dart';
 import 'package:aplicativo_nutricao/view/cadastro_usuario_page.dart';
 import 'package:aplicativo_nutricao/view/home_page.dart';
@@ -16,6 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  //final int usuarioId;
 
   String _calcularHash(String password) {
     var passwordInBytes = utf8.encode(password);
@@ -33,6 +35,13 @@ class _LoginPageState extends State<LoginPage> {
         if (usuario.isNotEmpty) {
           final senhaBanco = usuario.first['senha'];
           if (senhaBanco == senhaHash) {
+            // Obtém o ID do usuário do banco de dados
+            final userId = usuario.first['id'];
+
+            // Armazena o ID do usuário no SharedPreferences
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setInt('userId', userId);
+
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => const HomePage()),
@@ -50,7 +59,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -84,7 +94,8 @@ class _LoginPageState extends State<LoginPage> {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       'Email',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
                   TextFormField(
@@ -99,7 +110,8 @@ class _LoginPageState extends State<LoginPage> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Por favor, insira seu email';
-                      } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                      } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
+                          .hasMatch(value)) {
                         return 'Email inválido';
                       }
                       return null;
@@ -111,7 +123,8 @@ class _LoginPageState extends State<LoginPage> {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       'Senha',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
                   TextFormField(
@@ -136,7 +149,8 @@ class _LoginPageState extends State<LoginPage> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.redAccent,
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 80, vertical: 16),
                       textStyle: const TextStyle(fontSize: 18),
                     ),
                     onPressed: _login,
