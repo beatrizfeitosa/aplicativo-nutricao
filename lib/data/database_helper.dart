@@ -13,6 +13,18 @@ class Database {
         createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
       )
       """);
+
+    // Criação da tabela `alimentos`
+    await database.execute("""
+    CREATE TABLE alimentos (
+  id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  nome TEXT NOT NULL,
+  categoria TEXT NOT NULL,
+  tipo TEXT NOT NULL,
+  foto BLOB,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+  """);
   }
 
   static Future<sql.Database> database() async {
@@ -25,7 +37,12 @@ class Database {
     );
   }
 
-  static Future<int> insereUsuario({required String email, required String senha, required String nome, required String dataNascimento, required List<int> foto}) async {
+  static Future<int> insereUsuario(
+      {required String email,
+      required String senha,
+      required String nome,
+      required String dataNascimento,
+      required List<int> foto}) async {
     final database = await Database.database();
     final data = {
       'email': email,
@@ -34,17 +51,41 @@ class Database {
       'data_nascimento': dataNascimento,
       'foto': foto,
     };
-    final id = await database.insert('usuarios', data, conflictAlgorithm: sql.ConflictAlgorithm.replace);
+    final id = await database.insert('usuarios', data,
+        conflictAlgorithm: sql.ConflictAlgorithm.replace);
+    return id;
+  }
+
+  static Future<int> insereAlimento(
+      {required String nome,
+      required String categoria,
+      required String tipo,
+      required List<int> foto}) async {
+    final database = await Database.database();
+    final data = {
+      'nome': nome,
+      'categoria': categoria,
+      'tipo': tipo,
+      'foto': foto,
+    };
+    final id = await database.insert('alimentos', data,
+        conflictAlgorithm: sql.ConflictAlgorithm.replace);
     return id;
   }
 
   static Future<List<Map<String, dynamic>>> retornaUsuario(String email) async {
     final database = await Database.database();
-    return database.query('usuarios', where: "email = ?", whereArgs: [email], limit: 1);
+    return database.query('usuarios',
+        where: "email = ?", whereArgs: [email], limit: 1);
   }
 
   static Future<List<Map<String, dynamic>>> retornaUsuarios() async {
     final database = await Database.database();
     return database.query('usuarios');
+  }
+
+  static Future<List<Map<String, dynamic>>> retornaAlimentos() async {
+    final database = await Database.database();
+    return database.query('alimentos');
   }
 }

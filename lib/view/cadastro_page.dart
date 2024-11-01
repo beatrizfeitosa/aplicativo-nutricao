@@ -1,4 +1,9 @@
+import 'package:aplicativo_nutricao/view/cadastro_alimento.dart';
+import 'package:aplicativo_nutricao/view/nsei.dart';
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart'; // Para usar a função join
+
 
 class CadastroPage extends StatelessWidget {
   const CadastroPage({super.key});
@@ -59,8 +64,8 @@ class CadastroPage extends StatelessWidget {
               SizedBox(
                 width: 295,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Ação para cadastrar novo alimento
+                  onPressed: () async {
+                    cadastrarAlimento(context);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor:
@@ -86,7 +91,7 @@ class CadastroPage extends StatelessWidget {
                 width: 295,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Ação para cadastrar novo cardápio
+                    consultarAlimento(context);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor:
@@ -113,4 +118,29 @@ class CadastroPage extends StatelessWidget {
       ),
     );
   }
+
+   Future<void> deletarBancoDeDados() async {
+    // Obter o caminho do banco de dados
+    String caminhoBanco = join(await getDatabasesPath(), 'nutrify.db');
+    await deleteDatabase(caminhoBanco); // Deletar o banco de dados
+  }
+
+  cadastrarAlimento(BuildContext context) async {
+ // await deletarBancoDeDados();
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => CadastroAlimento(),
+    ),
+  );
+}
+
+consultarAlimento(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => AlimentosScreen(),
+    ),
+  );
+}
 }
