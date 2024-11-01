@@ -1,5 +1,4 @@
 import 'package:aplicativo_nutricao/view/cadastro_alimento.dart';
-import 'package:aplicativo_nutricao/view/nsei.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart'; // Para usar a função join
@@ -91,7 +90,6 @@ class CadastroPage extends StatelessWidget {
                 width: 295,
                 child: ElevatedButton(
                   onPressed: () {
-                    consultarAlimento(context);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor:
@@ -131,15 +129,6 @@ class CadastroPage extends StatelessWidget {
     context,
     MaterialPageRoute(
       builder: (context) => CadastroAlimento(),
-    ),
-  );
-}
-
-consultarAlimento(BuildContext context) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => AlimentosScreen(),
     ),
   );
 }
