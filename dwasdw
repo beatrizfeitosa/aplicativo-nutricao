@@ -1,0 +1,107 @@
+[33mcommit 50367bd8b64699c98a9dfc8dcfb629945c5874e8[m[33m ([m[1;36mHEAD[m[33m)[m
+Author: Hércules <herculeslimamota@gmail.com>
+Date:   Thu Oct 31 22:34:06 2024 -0300
+
+    Adding files to Food Registration
+
+[33mcommit fd04a23c942a30f54830cd8f2a2fc01fcd94d9b7[m
+Author: Denner Freitas <dennerwillian01@gmail.com>
+Date:   Tue Oct 29 21:19:11 2024 -0300
+
+    feat: built the registration options screen and adjusted the screens navigation method
+
+[33mcommit 2a8835aa30bf8eed4418ca49cf6cd44762186d53[m[33m ([m[1;31morigin/homolog[m[33m)[m
+Merge: 4cbd5bf 9c9f50a
+Author: Denner Freitas <99505735+DennerFreit4s@users.noreply.github.com>
+Date:   Tue Oct 29 16:08:20 2024 -0300
+
+    Merge pull request #5 from beatrizfeitosa/bug_fix/rename_files
+    
+    Fix bug "Unable to see images" and renamed files to lower case.
+
+[33mcommit 9c9f50ad9b8d86099130fbfe8e4b1c17fca38ab5[m[33m ([m[1;31morigin/bug_fix/rename_files[m[33m)[m
+Author: Raphael <raphaelwillian.bdp44@gmail.com>
+Date:   Mon Oct 28 10:17:55 2024 -0300
+
+    Fix bug "Unable to see images on Home and Creditos page #4" and renamed files to lower case.
+
+[33mcommit 4cbd5bf068e6006c3c06aef9b8c22cdcf3b7d30a[m
+Merge: eb79dee ce4274d
+Author: Beatriz Feitosa <feitosatriz@gmail.com>
+Date:   Sun Oct 27 20:52:20 2024 -0300
+
+    Merge pull request #3 from beatrizfeitosa/Login
+    
+    Add Login and CadastroUsuario features
+
+[33mcommit ce4274d6c0aa8bcfccc28f60ed3470eb24e34396[m[33m ([m[1;31morigin/Login[m[33m)[m
+Author: Raphael <raphaelwillian.bdp44@gmail.com>
+Date:   Sun Oct 27 18:06:55 2024 -0300
+
+    Add LoginPage and CadastroUsuarioPage logic, Add database_helper and UsuariosController.
+
+[33mcommit eb79dee460e18c8285a00d978c731b97ae316c1f[m
+Merge: 0fc8346 9f71c13
+Author: Beatriz Feitosa <feitosatriz@gmail.com>
+Date:   Fri Oct 25 19:04:26 2024 -0300
+
+    Merge pull request #2 from beatrizfeitosa/homepageFinal
+    
+    add creditos page
+
+[33mcommit 9f71c13c7a585db084ba6da644641e1aa27ff535[m
+Author: jeffersonlmonteiro <jeffersonlmonteiro25@gmail.com>
+Date:   Fri Oct 25 16:29:41 2024 -0300
+
+    Final Homepage and CreditosPage.
+
+[33mcommit 78b6417ccdd0cc1aeb4f45b63e040d562c69cf26[m
+Author: Raphael <raphaelwillian.bdp44@gmail.com>
+Date:   Fri Oct 25 16:07:55 2024 -0300
+
+    Add login components and CadastroUsuarioPage
+
+[33mcommit 0fc8346c5f7564223d00653de52867c805cf2f59[m
+Merge: c37d3d7 3c62c7d
+Author: Raphael Willian Barbosa de Paula <120695571+RaphaelWillianBarbosadePaula@users.noreply.github.com>
+Date:   Thu Oct 24 09:45:44 2024 -0300
+
+    Merge pull request #1 from beatrizfeitosa/homepage
+    
+    Add files for home page
+
+[33mcommit 3c62c7dc93f9f46a866d49544a7667c347c7d9b6[m
+Author: Jefferson Monteiro <jeffersonlmonteiro25@gmail.com>
+Date:   Wed Oct 23 22:11:25 2024 -0300
+
+    Add files for home page
+
+[33mcommit c37d3d70354f4e4bebb44ed02d56ebb8c4719950[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Author: Raphael <raphaelwillian.bdp44@gmail.com>
+Date:   Mon Oct 21 23:48:19 2024 -0300
+
+    Add flutter structure of project
+
+[33mcommit ab9627b4ba4ba4883ef1f39864cd62ea2010a96e[m
+Author: Beatriz Feitosa <feitosatriz@gmail.com>
+Date:   Wed Oct 16 16:43:09 2024 -0300
+
+    update readme
+
+[33mcommit a590bb62e6e0ce89ee9295ba9f39e0961d331a00[m
+Author: Beatriz Feitosa <feitosatriz@gmail.com>
+Date:   Wed Oct 16 16:42:28 2024 -0300
+
+    add hercules profile url to readme
+
+[33mcommit 4835c25a17919cfdac9270ddd46940fda837a829[m
+Author: Beatriz Feitosa <feitosatriz@gmail.com>
+Date:   Wed Oct 16 16:31:18 2024 -0300
+
+    update readme
+
+[33mcommit 57ede1970c0f70c3c1ca35181af77ad591cbb227[m
+Author: Beatriz Feitosa <feitosatriz@gmail.com>
+Date:   Wed Oct 16 16:13:10 2024 -0300
+
+    Initial commit

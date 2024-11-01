@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'package:aplicativo_nutricao/context/user_context.dart';
 import 'package:aplicativo_nutricao/controllers/alimentos_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CadastroAlimento extends StatefulWidget {
   const CadastroAlimento({Key? key}) : super(key: key);
@@ -18,6 +20,7 @@ class _CadastroAlimentoState extends State<CadastroAlimento> {
 
   @override
   Widget build(BuildContext context) {
+    final userProviderId = Provider.of<UserProvider>(context, listen: true);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cadastro de Alimento'),
@@ -219,8 +222,6 @@ class _CadastroAlimentoState extends State<CadastroAlimento> {
                       String? categoria = _categoriaSelecionada;
                       String? tipo = _tipoSelecionado;
 
-                      //int usuarioId = 
-
                       if (_formKey.currentState!.validate()) {
                         if (categoria != null && tipo != null) {
                           AlimentosController().cadastrarAlimento(
@@ -228,7 +229,7 @@ class _CadastroAlimentoState extends State<CadastroAlimento> {
                             categoria: categoria, // Passa a categoria selecionada
                             tipo: tipo, // Passa o tipo selecionado
                             foto: _imagePath, // Caminho da imagem
-                            //usuarioId: usuario
+                            userId: userProviderId.userId!,
                           );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(

@@ -22,7 +22,9 @@ class Database {
   categoria TEXT NOT NULL,
   tipo TEXT NOT NULL,
   foto BLOB,
-  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  userId INTEGER NOT NULL,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (userId) REFERENCES usuarios(id)
 )
   """);
   }
@@ -60,13 +62,15 @@ class Database {
       {required String nome,
       required String categoria,
       required String tipo,
-      required List<int> foto}) async {
+      required List<int> foto,
+      required int userId}) async {
     final database = await Database.database();
     final data = {
       'nome': nome,
       'categoria': categoria,
       'tipo': tipo,
       'foto': foto,
+      'userId': userId,
     };
     final id = await database.insert('alimentos', data,
         conflictAlgorithm: sql.ConflictAlgorithm.replace);
@@ -78,6 +82,7 @@ class Database {
     return database.query('usuarios',
         where: "email = ?", whereArgs: [email], limit: 1);
   }
+
 
   static Future<List<Map<String, dynamic>>> retornaUsuarios() async {
     final database = await Database.database();

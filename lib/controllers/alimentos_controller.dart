@@ -14,13 +14,14 @@ class AlimentosController {
     required String tipo,
     required String categoria,
     String? foto,
+    required int userId,
   }) async {
     List<int> imageBytes = [];
     if (foto != null) {
       imageBytes = await _converterImagemParaBytes(foto);
     }
 
-    await Database.insereAlimento(nome:nome, tipo:tipo, categoria:categoria, foto: imageBytes);
+    await Database.insereAlimento(nome:nome, tipo:tipo, categoria:categoria, foto: imageBytes, userId: userId);
   }
 
   Future<List<int>> _converterImagemParaBytes(String imagePath) async {
