@@ -13,6 +13,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,7 +92,7 @@ class _HomePageState extends State<HomePage> {
                   shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(20)))),
               onPressed: () {
-                cadastrarAlimento();
+                cadastrarAlimentoCardapio();
               },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -209,17 +210,17 @@ class _HomePageState extends State<HomePage> {
     fontSize: 18.0,
   );
 
-  cadastrarAlimento() {
-    Navigator.pushReplacement(
+  cadastrarAlimentoCardapio() {
+    Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const CadastroPage(),
+        builder: (context) => CadastroPage(),
       ),
     );
   }
 
   credito() {
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => const CreditosPage(),
@@ -228,11 +229,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   logout() {
-    Navigator.pushReplacement(
+    Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
         builder: (context) => const LoginPage(),
       ),
+      (route) => false
     );
   }
+
 }
+

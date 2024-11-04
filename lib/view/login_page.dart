@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'package:aplicativo_nutricao/context/user_context.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto/crypto.dart';
 import 'package:aplicativo_nutricao/data/database_helper.dart';
 import 'package:aplicativo_nutricao/view/cadastro_usuario_page.dart';
 import 'package:aplicativo_nutricao/view/home_page.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -33,6 +35,11 @@ class _LoginPageState extends State<LoginPage> {
         if (usuario.isNotEmpty) {
           final senhaBanco = usuario.first['senha'];
           if (senhaBanco == senhaHash) {
+
+            final userId = usuario.first['id'];
+            Provider.of<UserProvider>(context, listen: false).setUserId(userId);
+
+
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => const HomePage()),

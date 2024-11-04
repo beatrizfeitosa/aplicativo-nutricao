@@ -5,14 +5,46 @@ class Database {
     await database.execute("""
       CREATE TABLE usuarios (
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-        email TEXT NOT NULL,
+        email TEXT NOT NULL UNIQUE,
         senha TEXT NOT NULL,
-        nome TEXT,
-        data_nascimento TEXT,
+        nome TEXT NOT NULL,
+        data_nascimento TEXT NOT NULL,
         foto BLOB,
         createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
       )
       """);
+
+    await database.execute("""
+    CREATE TABLE alimentos (
+      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      nome TEXT NOT NULL,
+      categoria TEXT NOT NULL,
+      tipo TEXT NOT NULL,
+      foto BLOB,
+      userId INTEGER NOT NULL,
+      createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (userId) REFERENCES usuarios(id)
+    )
+    """);
+
+    await database.execute("""
+    CREATE TABLE cardapios (
+      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      userId INTEGER NOT NULL,
+      createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (userId) REFERENCES usuarios(id)
+    )
+    """);
+
+    await database.execute("""
+      CREATE TABLE cardapios_alimentos (
+        cardapio_id INTEGER NOT NULL,
+        alimento_id INTEGER NOT NULL,
+        PRIMARY KEY (cardapio_id, alimento_id),
+        FOREIGN KEY (cardapio_id) REFERENCES cardapios(id) ON DELETE CASCADE,
+        FOREIGN KEY (alimento_id) REFERENCES alimentos(id) ON DELETE CASCADE
+      )
+    """);
   }
 
   static Future<sql.Database> database() async {
@@ -25,7 +57,12 @@ class Database {
     );
   }
 
-  static Future<int> insereUsuario({required String email, required String senha, required String nome, required String dataNascimento, required List<int> foto}) async {
+  static Future<int> insereUsuario(
+      {required String email,
+      required String senha,
+      required String nome,
+      required String dataNascimento,
+      required List<int> foto}) async {
     final database = await Database.database();
     final data = {
       'email': email,
@@ -34,17 +71,130 @@ class Database {
       'data_nascimento': dataNascimento,
       'foto': foto,
     };
-    final id = await database.insert('usuarios', data, conflictAlgorithm: sql.ConflictAlgorithm.replace);
+    final id = await database.insert('usuarios', data,
+        conflictAlgorithm: sql.ConflictAlgorithm.replace);
     return id;
+  }
+
+  static Future<int> insereAlimento(
+      {required String nome,
+      required String tipo,
+      required String categoria,
+      required List<int> foto,
+      required int userId}) async {
+    final database = await Database.database();
+    final data = {
+      'nome': nome,
+      'categoria': categoria,
+      'tipo': tipo,
+      'foto': foto,
+      'userId': userId,
+    };
+    final id = await database.insert('alimentos', data,
+        conflictAlgorithm: sql.ConflictAlgorithm.replace);
+    return id;
+  }
+
+  static Future<int> insereCardapio({
+    required int userId,
+    required List<int> alimentosCafe,
+    required List<int> alimentosAlmoco,
+    required List<int> alimentosJanta,
+  }) async {
+    final database = await Database.database();
+
+    return await database.transaction((txn) async {
+      final cardapioId = await txn.insert(
+        'cardapios',
+        {'userId': userId},
+        conflictAlgorithm: sql.ConflictAlgorithm.replace,
+      );
+
+      Future<void> inserirAlimentos(List<int> alimentos) async {
+        for (int alimentoId in alimentos) {
+          await txn.insert(
+            'cardapios_alimentos',
+            {
+              'cardapio_id': cardapioId,
+              'alimento_id': alimentoId,
+            },
+            conflictAlgorithm: sql.ConflictAlgorithm.replace,
+          );
+        }
+      }
+
+      await inserirAlimentos(alimentosCafe);
+      await inserirAlimentos(alimentosAlmoco);
+      await inserirAlimentos(alimentosJanta);
+
+      return cardapioId;
+    });
   }
 
   static Future<List<Map<String, dynamic>>> retornaUsuario(String email) async {
     final database = await Database.database();
-    return database.query('usuarios', where: "email = ?", whereArgs: [email], limit: 1);
+    return database.query('usuarios',
+        where: "email = ?", whereArgs: [email], limit: 1);
   }
 
   static Future<List<Map<String, dynamic>>> retornaUsuarios() async {
     final database = await Database.database();
     return database.query('usuarios');
+  }
+
+  static Future<List<Map<String, dynamic>>> retornaIdsENomesUsuarios() async {
+  final database = await Database.database();
+
+  final List<Map<String, dynamic>> usuarios = await database.query(
+    'usuarios',
+    columns: ['id', 'nome'],
+  );
+
+  return usuarios;
+}
+
+  static Future<List<Map<String, dynamic>>> retornaAlimentos() async {
+    final database = await Database.database();
+    return database.query('alimentos');
+  }
+
+  static Future<List<Map<String, dynamic>>> retornaAlimentosPorCategoria(
+      String categoria) async {
+    final database = await Database.database();
+
+    final List<Map<String, dynamic>> alimentos = await database.query(
+      'alimentos',
+      columns: ['id', 'nome'],
+      where: 'categoria = ?',
+      whereArgs: [categoria],
+    );
+
+    return alimentos;
+  }
+
+  // Retorna detalhes de um cardápio específico pelo ID
+  static Future<List<Map<String, dynamic>>> retornaCardapio(int cardapioId) async {
+    final database = await Database.database();
+    return database.query(
+      'cardapios',
+      where: 'id = ?',
+      whereArgs: [cardapioId],
+      limit: 1,
+    );
+  }
+
+  // Retorna alimentos associados a um cardápio específico
+  static Future<List<Map<String, dynamic>>> retornaCardapioAlimentos(int cardapioId) async {
+    final database = await Database.database();
+
+    // Fazendo uma consulta usando JOIN para pegar os alimentos associados ao cardápio
+    final List<Map<String, dynamic>> alimentos = await database.rawQuery("""
+      SELECT a.id, a.nome, a.categoria, a.tipo 
+      FROM cardapios_alimentos ca
+      JOIN alimentos a ON ca.alimento_id = a.id
+      WHERE ca.cardapio_id = ?
+    """, [cardapioId]);
+
+    return alimentos;
   }
 }
