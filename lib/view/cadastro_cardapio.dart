@@ -29,7 +29,6 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
   }
 
   Future<void> _loadData() async {
-    // Carregar dados do banco de dados
     usuarios = await Database.retornaIdsENomesUsuarios();
     cafeOptions = await Database.retornaAlimentosPorCategoria('Café');
     almocoOptions = await Database.retornaAlimentosPorCategoria('Almoço');
@@ -103,7 +102,7 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
                           ),
                           const SizedBox(height: 32),
                           SizedBox(
-                            width: 300,
+                            width: double.maxFinite,
                             child: ElevatedButton(
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
@@ -127,10 +126,6 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
                                         ),
                                       );
 
-                                      print(await Database.retornaCardapio(cardapioId));
-                                      print(await Database.retornaCardapioAlimentos(cardapioId));
-
-                                      // Limpar as seleções após cadastrar
                                       setState(() {
                                         selectedUsuarioId = null;
                                         selectedCafeIds.clear();
