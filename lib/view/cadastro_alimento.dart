@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CadastroAlimento extends StatefulWidget {
-  const CadastroAlimento({Key? key}) : super(key: key);
+  const CadastroAlimento({super.key});
 
   @override
   State<CadastroAlimento> createState() => _CadastroAlimentoState();
@@ -22,19 +22,47 @@ class _CadastroAlimentoState extends State<CadastroAlimento> {
   Widget build(BuildContext context) {
     final userProviderId = Provider.of<UserProvider>(context, listen: true);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Cadastro de Alimento'),
-      ),
       backgroundColor: const Color(0xFFE8FFD5),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(40.0),
             child: Form(
               key: _formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 0),
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            size: 36,
+                            color: Colors.black,
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  const Row(
+                    children: [
+                      Text(
+                        "Novo alimento",
+                        style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 30),
                   GestureDetector(
                     onTap: _selectImage,
                     child: _imagePath != null
@@ -52,21 +80,26 @@ class _CadastroAlimentoState extends State<CadastroAlimento> {
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'Nome do Alimento',
-                      style: TextStyle(fontSize: 16),
+                      'Nome',
+                      style:
+                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                   ),
+                  const SizedBox(height: 5),
                   TextFormField(
                     controller: _nomeController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       hintText: 'Digite o nome do alimento',
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide:
+                            const BorderSide(color: Colors.grey, width: 1000),
+                      ),
                       filled: true,
                       fillColor: Colors.white,
                     ),
                     style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
+                      fontSize: 14,
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -80,24 +113,25 @@ class _CadastroAlimentoState extends State<CadastroAlimento> {
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'Selecione a Categoria',
-                      style: TextStyle(fontSize: 16),
+                      'Categoria',
+                      style:
+                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 5),
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: ExpansionTile(
                         title: Text(
-                          _categoriaSelecionada ?? 'Categoria',
+                          _categoriaSelecionada ?? 'Café, almoço, janta...',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.normal,
                           ),
                         ),
@@ -140,24 +174,25 @@ class _CadastroAlimentoState extends State<CadastroAlimento> {
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'Selecione o Tipo',
-                      style: TextStyle(fontSize: 16),
+                      'Tipo',
+                      style:
+                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 5),
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: ExpansionTile(
                         title: Text(
-                          _tipoSelecionado ?? 'Tipo',
+                          _tipoSelecionado ?? 'Bebida, fruta, grão...',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.normal,
                           ),
                         ),
@@ -218,32 +253,34 @@ class _CadastroAlimentoState extends State<CadastroAlimento> {
                   ),
                   const SizedBox(height: 32),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       String? categoria = _categoriaSelecionada;
                       String? tipo = _tipoSelecionado;
 
                       if (_formKey.currentState!.validate()) {
                         if (categoria != null && tipo != null) {
-                          AlimentosController().cadastrarAlimento(
+                          await AlimentosController().cadastrarAlimento(
                             nome: _nomeController.text,
-                            categoria: categoria, // Passa a categoria selecionada
-                            tipo: tipo, // Passa o tipo selecionado
-                            foto: _imagePath, // Caminho da imagem
+                            tipo: tipo,
+                            categoria: categoria,
+                            foto: _imagePath,
                             userId: userProviderId.userId!,
                           );
+
+                          Navigator.pop(context);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text(
-                                      'Selecione uma categoria e um tipo.')));
+                            const SnackBar(
+                              content:
+                                  Text('Selecione uma categoria e um tipo.'),
+                            ),
+                          );
                         }
-                        Navigator.pop(context); // Volta para a tela anterior
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          const Color(0xFFF46472), // Cor de fundo do botão
-                      foregroundColor: Colors.white, // Cor do texto do botão
+                      backgroundColor: const Color(0xFFF46472),
+                      foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 120, vertical: 15),
                       shape: RoundedRectangleBorder(
@@ -253,7 +290,7 @@ class _CadastroAlimentoState extends State<CadastroAlimento> {
                     child: const Text(
                       'Cadastrar', // Texto do botão
                       style: TextStyle(
-                        fontWeight: FontWeight.bold, // Deixa o texto em negrito
+                        fontWeight: FontWeight.bold,
                         color: Colors
                             .white, // Garante que a cor do texto seja branca
                       ),

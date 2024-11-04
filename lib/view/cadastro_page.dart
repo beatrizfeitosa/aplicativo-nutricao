@@ -1,8 +1,6 @@
 import 'package:aplicativo_nutricao/view/cadastro_alimento.dart';
+import 'package:aplicativo_nutricao/view/cadastro_cardapio.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart'; // Para usar a função join
-
 
 class CadastroPage extends StatelessWidget {
   const CadastroPage({super.key});
@@ -63,12 +61,16 @@ class CadastroPage extends StatelessWidget {
               SizedBox(
                 width: 295,
                 child: ElevatedButton(
-                  onPressed: () async {
-                    cadastrarAlimento(context);
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CadastroAlimento(),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        const Color(0xFFF46472), // Cor de fundo do botão
+                    backgroundColor: const Color(0xFFF46472),
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 15),
                     shape: RoundedRectangleBorder(
@@ -90,10 +92,15 @@ class CadastroPage extends StatelessWidget {
                 width: 295,
                 child: ElevatedButton(
                   onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NovoCardapioPage(),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        const Color(0xFFF46472), // Cor de fundo do botão
+                    backgroundColor: const Color(0xFFF46472),
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 15),
                     shape: RoundedRectangleBorder(
@@ -116,20 +123,4 @@ class CadastroPage extends StatelessWidget {
       ),
     );
   }
-
-   Future<void> deletarBancoDeDados() async {
-    // Obter o caminho do banco de dados
-    String caminhoBanco = join(await getDatabasesPath(), 'nutrify.db');
-    await deleteDatabase(caminhoBanco); // Deletar o banco de dados
-  }
-
-  cadastrarAlimento(BuildContext context) async {
- // await deletarBancoDeDados();
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => CadastroAlimento(),
-    ),
-  );
-}
 }
