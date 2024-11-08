@@ -34,33 +34,28 @@ class _CadastroAlimentoState extends State<CadastroAlimento> {
                 children: [
                   Row(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 0),
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back,
-                            size: 36,
-                            color: Colors.black,
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
+                      IconButton(
+                        icon: const Icon(
+                          Icons.arrow_back,
+                          size: 36,
+                          color: Colors.black,
                         ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
                       ),
                     ],
                   ),
                   const SizedBox(height: 20),
-                  const Row(
-                    children: [
-                      Text(
-                        "Novo alimento",
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                        ),
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Novo alimento",
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ],
+                    ),
                   ),
                   const SizedBox(height: 30),
                   GestureDetector(
@@ -77,192 +72,30 @@ class _CadastroAlimentoState extends State<CadastroAlimento> {
                           ),
                   ),
                   const SizedBox(height: 32),
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Nome',
-                      style:
-                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  TextFormField(
-                    controller: _nomeController,
-                    decoration: InputDecoration(
-                      hintText: 'Digite o nome do alimento',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide:
-                            const BorderSide(color: Colors.grey, width: 1000),
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
-                    ),
-                    style: const TextStyle(
-                      fontSize: 14,
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor, insira o nome do alimento';
-                      }
-                      return null;
-                    },
-                    maxLines: 1,
+                  _buildTextField('Nome', _nomeController, 'Digite o nome do alimento'),
+                  const SizedBox(height: 25),
+                  _buildDropdownField(
+                    'Categoria',
+                    _categoriaSelecionada,
+                    ['Café', 'Almoço', 'Janta'],
+                    (value) => setState(() => _categoriaSelecionada = value),
                   ),
                   const SizedBox(height: 25),
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Categoria',
-                      style:
-                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: ExpansionTile(
-                        title: Text(
-                          _categoriaSelecionada ?? 'Café, almoço, janta...',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                        children: <Widget>[
-                          const Divider(),
-                          ListTile(
-                            title: const Text('Café'),
-                            onTap: () {
-                              setState(() {
-                                _categoriaSelecionada =
-                                    'Café'; // Atualiza a categoria selecionada
-                              });
-                            },
-                          ),
-                          const Divider(),
-                          ListTile(
-                            title: const Text('Almoço'),
-                            onTap: () {
-                              setState(() {
-                                _categoriaSelecionada =
-                                    'Almoço'; // Atualiza a categoria selecionada
-                              });
-                            },
-                          ),
-                          const Divider(),
-                          ListTile(
-                            title: const Text('Janta'),
-                            onTap: () {
-                              setState(() {
-                                _categoriaSelecionada =
-                                    'Janta'; // Atualiza a categoria selecionada
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 25),
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Tipo',
-                      style:
-                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: ExpansionTile(
-                        title: Text(
-                          _tipoSelecionado ?? 'Bebida, fruta, grão...',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                        children: <Widget>[
-                          const Divider(),
-                          ListTile(
-                            title: const Text('Bebida'),
-                            onTap: () {
-                              setState(() {
-                                _tipoSelecionado =
-                                    'Bebida'; // Atualiza a categoria selecionada
-                              });
-                            },
-                          ),
-                          const Divider(),
-                          ListTile(
-                            title: const Text('Proteina'),
-                            onTap: () {
-                              setState(() {
-                                _tipoSelecionado =
-                                    'Proteina'; // Atualiza a categoria selecionada
-                              });
-                            },
-                          ),
-                          const Divider(),
-                          ListTile(
-                            title: const Text('Carboidrato'),
-                            onTap: () {
-                              setState(() {
-                                _tipoSelecionado =
-                                    'Carboidrato'; // Atualiza a categoria selecionada
-                              });
-                            },
-                          ),
-                          const Divider(),
-                          ListTile(
-                            title: const Text('Fruta'),
-                            onTap: () {
-                              setState(() {
-                                _tipoSelecionado =
-                                    'Fruta'; // Atualiza a categoria selecionada
-                              });
-                            },
-                          ),
-                          const Divider(),
-                          ListTile(
-                            title: const Text('Grão'),
-                            onTap: () {
-                              setState(() {
-                                _tipoSelecionado =
-                                    'Grão'; // Atualiza a categoria selecionada
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
+                  _buildDropdownField(
+                    'Tipo',
+                    _tipoSelecionado,
+                    ['Bebida', 'Proteina', 'Carboidrato', 'Fruta', 'Grão', 'Doce', 'Legume', 'Verdura', 'Outros'],
+                    (value) => setState(() => _tipoSelecionado = value),
                   ),
                   const SizedBox(height: 32),
                   ElevatedButton(
                     onPressed: () async {
-                      String? categoria = _categoriaSelecionada;
-                      String? tipo = _tipoSelecionado;
-
                       if (_formKey.currentState!.validate()) {
-                        if (categoria != null && tipo != null) {
+                        if (_categoriaSelecionada != null && _tipoSelecionado != null) {
                           await AlimentosController().cadastrarAlimento(
                             nome: _nomeController.text,
-                            tipo: tipo,
-                            categoria: categoria,
+                            tipo: _tipoSelecionado!,
+                            categoria: _categoriaSelecionada!,
                             foto: _imagePath,
                             userId: userProviderId.userId!,
                           );
@@ -271,8 +104,7 @@ class _CadastroAlimentoState extends State<CadastroAlimento> {
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content:
-                                  Text('Selecione uma categoria e um tipo.'),
+                              content: Text('Selecione uma categoria e um tipo.'),
                             ),
                           );
                         }
@@ -280,20 +112,14 @@ class _CadastroAlimentoState extends State<CadastroAlimento> {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFF46472),
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 120, vertical: 15),
+                      padding: const EdgeInsets.symmetric(horizontal: 120, vertical: 15),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
                     child: const Text(
-                      'Cadastrar', // Texto do botão
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors
-                            .white, // Garante que a cor do texto seja branca
-                      ),
+                      'Cadastrar',
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                   ),
                 ],
@@ -302,6 +128,69 @@ class _CadastroAlimentoState extends State<CadastroAlimento> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildTextField(String label, TextEditingController controller, String hint) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 5),
+        TextFormField(
+          controller: controller,
+          decoration: InputDecoration(
+            hintText: hint,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            filled: true,
+            fillColor: Colors.white,
+          ),
+          validator: (value) => value == null || value.isEmpty ? 'Campo obrigatório' : null,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDropdownField(
+    String label,
+    String? selectedValue,
+    List<String> items,
+    Function(String?) onChanged,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 5),
+        DropdownButtonFormField<String>(
+          value: selectedValue,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            filled: true,
+            fillColor: Colors.white,
+          ),
+          hint: Text('Selecione $label'),
+          onChanged: onChanged,
+          items: items.map((item) {
+            return DropdownMenuItem(
+              value: item,
+              child: Text(item),
+            );
+          }).toList(),
+          validator: (value) =>
+              value == null || value.isEmpty ? 'Selecione uma $label' : null,
+        ),
+      ],
     );
   }
 
