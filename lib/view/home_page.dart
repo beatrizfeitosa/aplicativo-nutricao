@@ -13,7 +13,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -197,7 +196,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   consultarAlimento() {
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => const ConsultaPage(),
@@ -230,13 +229,10 @@ class _HomePageState extends State<HomePage> {
 
   logout() {
     Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const LoginPage(),
-      ),
-      (route) => false
-    );
+        context,
+        MaterialPageRoute(
+          builder: (context) => const LoginPage(),
+        ),
+        (route) => false);
   }
-
 }
-
