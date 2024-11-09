@@ -22,6 +22,12 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
   List<int> selectedAlmocoIds = [];
   List<int> selectedJantaIds = [];
 
+  // Adicionando ScrollControllers
+  final ScrollController _usuarioScrollController = ScrollController();
+  final ScrollController _cafeScrollController = ScrollController();
+  final ScrollController _almocoScrollController = ScrollController();
+  final ScrollController _jantaScrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -34,6 +40,16 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
     almocoOptions = await Database.retornaAlimentosPorCategoria('Almoço');
     jantaOptions = await Database.retornaAlimentosPorCategoria('Janta');
     setState(() {});
+  }
+
+  @override
+  void dispose() {
+    // Disposing ScrollControllers
+    _usuarioScrollController.dispose();
+    _cafeScrollController.dispose();
+    _almocoScrollController.dispose();
+    _jantaScrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -85,6 +101,7 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
                             options: cafeOptions,
                             selectedOptions: selectedCafeIds,
                             maxSelection: 3,
+                            scrollController: _cafeScrollController,
                           ),
                           const SizedBox(height: 16),
                           _buildExpansionTile(
@@ -92,6 +109,7 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
                             options: almocoOptions,
                             selectedOptions: selectedAlmocoIds,
                             maxSelection: 5,
+                            scrollController: _almocoScrollController,
                           ),
                           const SizedBox(height: 16),
                           _buildExpansionTile(
@@ -99,6 +117,7 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
                             options: jantaOptions,
                             selectedOptions: selectedJantaIds,
                             maxSelection: 4,
+                            scrollController: _jantaScrollController,
                           ),
                           const SizedBox(height: 32),
                           SizedBox(
@@ -111,7 +130,7 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
                                       selectedAlmocoIds.isNotEmpty &&
                                       selectedJantaIds.isNotEmpty) {
                                     try {
-                                        final cardapioId = await Database.insereCardapio(
+                                      await Database.insereCardapio(
                                         userId: selectedUsuarioId!,
                                         alimentosCafe: selectedCafeIds,
                                         alimentosAlmoco: selectedAlmocoIds,
@@ -230,7 +249,9 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
               thickness: 6.0,
               radius: const Radius.circular(8),
               scrollbarOrientation: ScrollbarOrientation.right,
+              controller: _usuarioScrollController,
               child: ListView(
+                controller: _usuarioScrollController,
                 children: usuarios.map((usuario) {
                   return ListTile(
                     title: Text(usuario['nome']),
@@ -255,6 +276,7 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
     required List<Map<String, dynamic>> options,
     required List<int> selectedOptions,
     required int maxSelection,
+    required ScrollController scrollController,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -279,7 +301,9 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
               thickness: 6.0,
               radius: Radius.circular(8),
               scrollbarOrientation: ScrollbarOrientation.right,
+              controller: scrollController,
               child: SingleChildScrollView(
+                controller: scrollController,
                 child: Column(
                   children: options.map((option) {
                     final bool isSelected =
