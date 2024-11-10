@@ -6,6 +6,7 @@ import 'package:aplicativo_nutricao/data/database_helper.dart';
 import 'package:aplicativo_nutricao/view/cadastro_usuario_page.dart';
 import 'package:aplicativo_nutricao/view/home_page.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -24,6 +25,11 @@ class _LoginPageState extends State<LoginPage> {
     return sha256.convert(passwordInBytes).toString();
   }
 
+  Future<void> _saveUserId(int userId) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt('userId', userId);
+  }
+
   void _login() async {
     if (_formKey.currentState!.validate()) {
       final email = _emailController.text;
@@ -35,10 +41,11 @@ class _LoginPageState extends State<LoginPage> {
         if (usuario.isNotEmpty) {
           final senhaBanco = usuario.first['senha'];
           if (senhaBanco == senhaHash) {
-
             final userId = usuario.first['id'];
-            Provider.of<UserProvider>(context, listen: false).setUserId(userId);
 
+            await _saveUserId(userId);
+
+            Provider.of<UserProvider>(context, listen: false).setUserId(userId);
 
             Navigator.pushReplacement(
               context,
