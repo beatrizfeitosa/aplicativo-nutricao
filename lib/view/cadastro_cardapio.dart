@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:aplicativo_nutricao/data/database_helper.dart';
+import 'dart:typed_data';
 
 class NovoCardapioPage extends StatefulWidget {
   const NovoCardapioPage({super.key});
@@ -237,35 +238,79 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
   }
 
   void _showUsuarioDropdown() {
+    String searchQuery = '';
+
+    List<Map<String, dynamic>> _filteredUsuarios() {
+      if (searchQuery.isEmpty) {
+        return usuarios;
+      } else {
+        return usuarios.where((usuario) {
+          return usuario['nome']
+              .toLowerCase()
+              .contains(searchQuery.toLowerCase());
+        }).toList();
+      }
+    }
+
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const Text('Selecione um usuário'),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: Scrollbar(
-              thumbVisibility: true,
-              thickness: 6.0,
-              radius: const Radius.circular(8),
-              scrollbarOrientation: ScrollbarOrientation.right,
-              controller: _usuarioScrollController,
-              child: ListView(
-                controller: _usuarioScrollController,
-                children: usuarios.map((usuario) {
-                  return ListTile(
-                    title: Text(usuario['nome']),
-                    onTap: () {
-                      setState(() {
-                        selectedUsuarioId = usuario['id'];
-                      });
-                      Navigator.of(context).pop();
-                    },
-                  );
-                }).toList(),
+        return StatefulBuilder(
+          builder: (context, setState) {
+            final filteredUsuarios = _filteredUsuarios();
+            return AlertDialog(
+              title: const Text('Selecione um usuário'),
+              content: SizedBox(
+                width: double.maxFinite,
+                child: Column(
+                  children: [
+                    TextField(
+                      decoration: const InputDecoration(
+                        hintText: 'Buscar usuário',
+                        prefixIcon: Icon(Icons.search),
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          searchQuery = value;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: Scrollbar(
+                        thumbVisibility: true,
+                        thickness: 6.0,
+                        radius: const Radius.circular(8),
+                        scrollbarOrientation: ScrollbarOrientation.right,
+                        controller: _usuarioScrollController,
+                        child: filteredUsuarios.isEmpty
+                            ? Center(
+                                child: Text(
+                                  'Nenhum usuário encontrado.',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                              )
+                            : ListView(
+                                controller: _usuarioScrollController,
+                                children: filteredUsuarios.map((usuario) {
+                                  return ListTile(
+                                    title: Text(usuario['nome']),
+                                    onTap: () {
+                                      setState(() {
+                                        selectedUsuarioId = usuario['id'];
+                                      });
+                                      Navigator.of(context).pop();
+                                    },
+                                  );
+                                }).toList(),
+                              ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );
@@ -278,67 +323,131 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
     required int maxSelection,
     required ScrollController scrollController,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.black, width: 2),
-      ),
-      child: ExpansionTile(
-        title: Text(
-          title,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-            color: Colors.black,
+    TextEditingController searchController = TextEditingController();
+    List<Map<String, dynamic>> filteredOptions = List.from(options);
+
+    return StatefulBuilder(
+      builder: (BuildContext context, StateSetter setState) {
+        void filterOptions(String query) {
+          setState(() {
+            filteredOptions = options.where((option) {
+              return option['nome'].toLowerCase().contains(query.toLowerCase());
+            }).toList();
+          });
+        }
+
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.black, width: 2),
           ),
-        ),
-        children: [
-          SizedBox(
-            height: 150,
-            child: Scrollbar(
-              thumbVisibility: true,
-              thickness: 6.0,
-              radius: Radius.circular(8),
-              scrollbarOrientation: ScrollbarOrientation.right,
-              controller: scrollController,
-              child: SingleChildScrollView(
-                controller: scrollController,
-                child: Column(
-                  children: options.map((option) {
-                    final bool isSelected =
-                        selectedOptions.contains(option['id']);
-                    return CheckboxListTile(
-                      title: Text(option['nome']),
-                      activeColor: const Color(0xFFF46472),
-                      value: isSelected,
-                      onChanged: (bool? selected) {
-                        setState(() {
-                          if (selected == true) {
-                            if (selectedOptions.length < maxSelection) {
-                              selectedOptions.add(option['id']);
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    "Você pode selecionar no máximo $maxSelection opções para '$title'.",
-                                  ),
-                                ),
-                              );
-                            }
-                          } else {
-                            selectedOptions.remove(option['id']);
-                          }
-                        });
-                      },
-                    );
-                  }).toList(),
-                ),
+          child: ExpansionTile(
+            title: Text(
+              title,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: Colors.black,
               ),
             ),
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: TextField(
+                  controller: searchController,
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.search, color: Colors.black),
+                    hintText: 'Buscar alimento...',
+                    border: const UnderlineInputBorder(),
+                    enabledBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    focusedBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.black,
+                          width: 2), // Cor e espessura da linha quando focado
+                    ),
+                  ),
+                  onChanged: filterOptions,
+                ),
+              ),
+              SizedBox(
+                height: 200,
+                child: Scrollbar(
+                  thumbVisibility: true,
+                  thickness: 6.0,
+                  radius: Radius.circular(8),
+                  scrollbarOrientation: ScrollbarOrientation.right,
+                  controller: scrollController,
+                  child: filteredOptions.isEmpty
+                      ? Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text(
+                              'Nenhum alimento encontrado.',
+                              style: TextStyle(color: Colors.grey),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        )
+                      : SingleChildScrollView(
+                          controller: scrollController,
+                          child: Column(
+                            children: filteredOptions.map((option) {
+                              final bool isSelected =
+                                  selectedOptions.contains(option['id']);
+                              final List<int> imageBytes =
+                                  List<int>.from(option['foto']);
+                              return CheckboxListTile(
+                                title: Text(option['nome']),
+                                subtitle: Text(option['tipo']),
+                                secondary: (imageBytes.isNotEmpty)
+                                    ? Image.memory(
+                                        Uint8List.fromList(imageBytes),
+                                        width: 40,
+                                        height: 40,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : Icon(
+                                        Icons.image_not_supported,
+                                        size: 40,
+                                        color: Colors.grey,
+                                      ),
+                                activeColor: const Color(0xFFF46472),
+                                value: isSelected,
+                                onChanged: (bool? selected) {
+                                  setState(() {
+                                    if (selected == true) {
+                                      if (selectedOptions.length <
+                                          maxSelection) {
+                                        selectedOptions.add(option['id']);
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              "Você pode selecionar no máximo $maxSelection opções para '$title'.",
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    } else {
+                                      selectedOptions.remove(option['id']);
+                                    }
+                                  });
+                                },
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
