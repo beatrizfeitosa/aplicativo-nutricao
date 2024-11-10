@@ -158,6 +158,20 @@ class Database {
     return database.query('alimentos');
   }
 
+  static Future<List<Map<String, dynamic>>> retornaAlimentosPorId(
+      int id) async {
+    final database = await Database.database();
+
+    final List<Map<String, dynamic>> alimento = await database.query(
+      'alimentos',
+      columns: ['id', 'nome', 'tipo', 'categoria', 'foto', 'userId'],
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    return alimento;
+  }
+
   static Future<List<Map<String, dynamic>>> retornaAlimentosPorCategoria(
       String categoria) async {
     final database = await Database.database();

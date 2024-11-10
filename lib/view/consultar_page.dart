@@ -153,8 +153,7 @@ class _ConsultaPageState extends State<ConsultaPage> {
         trailing: Icon(Icons.arrow_forward_ios),
         onTap: () {
           if (id.isNotEmpty) {
-            print(
-                "Navegando para o ID: $id"); // Verificar se o ID não está vazio
+            print("Navegando para o ID: $id");
             if (tipo == 'usuario') {
               Navigator.push(
                 context,
@@ -170,12 +169,20 @@ class _ConsultaPageState extends State<ConsultaPage> {
                 ),
               );
             } else if (tipo == 'cardapio') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DetalharCardapioPage(id: id),
-                ),
-              );
+              // Convertendo o ID para int antes de passar para a página de cardápio
+              int cardapioId = int.tryParse(id) ??
+                  0; // Tentando converter para int (0 se falhar)
+              if (cardapioId > 0) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        DetalharCardapioPage(cardapioId: cardapioId),
+                  ),
+                );
+              } else {
+                print("ID do cardápio inválido: $id");
+              }
             }
           } else {
             print("ID inválido ou vazio: $id");
