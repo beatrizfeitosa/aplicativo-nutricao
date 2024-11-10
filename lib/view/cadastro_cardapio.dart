@@ -59,7 +59,6 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
 
   @override
   void dispose() {
-    // Disposing ScrollControllers
     _usuarioScrollController.dispose();
     _cafeScrollController.dispose();
     _almocoScrollController.dispose();
@@ -111,7 +110,7 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
                             ),
                           ),
                           const SizedBox(height: 24),
-                          _buildUsuarioDropdown(),
+                          _buildUsuarioDropdown(_usuarioScrollController),
                           const SizedBox(height: 16),
                           _buildExpansionTile(
                             title: 'Opções para o café',
@@ -219,7 +218,7 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
     );
   }
 
-  Widget _buildUsuarioDropdown() {
+  Widget _buildUsuarioDropdown(scrollController) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -229,7 +228,7 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
         ),
         const SizedBox(height: 5),
         GestureDetector(
-          onTap: _showUsuarioDropdown,
+          onTap: () => { _showUsuarioDropdown(scrollController) }, 
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
@@ -255,7 +254,7 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
     );
   }
 
-  void _showUsuarioDropdown() {
+  void _showUsuarioDropdown (scrollController) {
     showDialog(
       context: context,
       builder: (context) {
@@ -284,6 +283,7 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
                     thickness: 6.0,
                     radius: const Radius.circular(8),
                     scrollbarOrientation: ScrollbarOrientation.right,
+                    controller: scrollController,
                     child: filteredUsuarios.isEmpty
                         ? Center(
                             child: Text(
@@ -292,7 +292,7 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
                             ),
                           )
                         : ListView(
-                            controller: _usuarioScrollController,
+                            controller: scrollController,
                             children: filteredUsuarios.map((usuario) {
                               return ListTile(
                                 title: Text(usuario['nome']),
