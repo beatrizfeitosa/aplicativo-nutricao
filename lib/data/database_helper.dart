@@ -200,6 +200,24 @@ class Database {
     return alimentos;
   }
 
+  static Future<Map<String, dynamic>> retornaDetalhesUsuario(String id) async {
+    final database = await Database.database();
+
+    // Buscando o usuário com o ID específico
+    final List<Map<String, dynamic>> result = await database.query(
+      'usuarios',
+      where: 'id = ?',
+      whereArgs: [id],
+      limit: 1,
+    );
+
+    if (result.isNotEmpty) {
+      return result.first; // Retorna o mapa com os dados do usuário
+    } else {
+      throw Exception('Usuário não encontrado');
+    }
+  }
+
   static Future<List<Map<String, dynamic>>> buscaGeral(String termo) async {
     final database = await Database.database();
     final termoLower = '%${termo.toLowerCase()}%';

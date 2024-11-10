@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:aplicativo_nutricao/controllers/busca_controller.dart'; // Importe o controller de busca
 import 'dart:typed_data';
+import 'detalhe_usuario.dart';
+import 'detalhe_alimento.dart';
+import 'detalhe_cardapio.dart';
 
 class ConsultaPage extends StatefulWidget {
   const ConsultaPage({super.key});
@@ -92,6 +95,7 @@ class _ConsultaPageState extends State<ConsultaPage> {
                           : null,
                       autor: item['autor'] ?? 'Sem autor',
                       tipo: item['tipo'] ?? 'Desconhecido',
+                      id: item['id'] ?? '', // Adicionando o id aqui
                     );
                   },
                 ),
@@ -109,6 +113,7 @@ class _ConsultaPageState extends State<ConsultaPage> {
     required List<int>? foto,
     required String autor,
     required String tipo,
+    required String id, // Passando o id para a navegação
   }) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -147,7 +152,34 @@ class _ConsultaPageState extends State<ConsultaPage> {
         ),
         trailing: Icon(Icons.arrow_forward_ios),
         onTap: () {
-          // Ação ao tocar no item
+          if (id.isNotEmpty) {
+            print(
+                "Navegando para o ID: $id"); // Verificar se o ID não está vazio
+            if (tipo == 'usuario') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetalharUsuarioPage(id: id),
+                ),
+              );
+            } else if (tipo == 'alimento') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetalharAlimentoPage(id: id),
+                ),
+              );
+            } else if (tipo == 'cardapio') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetalharCardapioPage(id: id),
+                ),
+              );
+            }
+          } else {
+            print("ID inválido ou vazio: $id");
+          }
         },
       ),
     );

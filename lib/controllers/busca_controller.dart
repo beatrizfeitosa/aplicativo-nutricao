@@ -36,12 +36,20 @@ class BuscaController {
     final resultados = await Database.buscaGeral(termo);
     return resultados.map((item) {
       return {
+        'id': item['id'].toString(),
         'nome': item['nome'] as String?,
         'tipo': item['tipo'] as String,
         'foto': item['foto'] as List<int>?,
-        'autor': item['autor'] as String?
+        'autor': item['autor'] as String?,
       };
     }).toList();
+  }
+
+  // Método para buscar os detalhes de um usuário específico
+  Future<Map<String, dynamic>> buscaDetalhesUsuario(String id) async {
+    final resultado = await Database.retornaDetalhesUsuario(
+        id); // Ou a consulta correspondente ao banco de dados
+    return resultado; // Aqui, verifica se o retorno inclui o id corretamente
   }
 
   void dispose() {
