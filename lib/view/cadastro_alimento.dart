@@ -1,8 +1,7 @@
 import 'dart:io';
-import 'package:aplicativo_nutricao/context/user_context.dart';
 import 'package:aplicativo_nutricao/controllers/alimentos_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CadastroAlimento extends StatefulWidget {
   const CadastroAlimento({super.key});
@@ -20,7 +19,6 @@ class _CadastroAlimentoState extends State<CadastroAlimento> {
 
   @override
   Widget build(BuildContext context) {
-    final userProviderId = Provider.of<UserProvider>(context, listen: true);
     return Scaffold(
       backgroundColor: const Color(0xFFE8FFD5),
       body: Center(
@@ -72,7 +70,8 @@ class _CadastroAlimentoState extends State<CadastroAlimento> {
                           ),
                   ),
                   const SizedBox(height: 32),
-                  _buildTextField('Nome', _nomeController, 'Digite o nome do alimento'),
+                  _buildTextField(
+                      'Nome', _nomeController, 'Digite o nome do alimento'),
                   const SizedBox(height: 25),
                   _buildDropdownField(
                     'Categoria',
@@ -84,42 +83,86 @@ class _CadastroAlimentoState extends State<CadastroAlimento> {
                   _buildDropdownField(
                     'Tipo',
                     _tipoSelecionado,
-                    ['Bebida', 'Proteina', 'Carboidrato', 'Fruta', 'Grão', 'Doce', 'Legume', 'Verdura', 'Outros'],
+                    [
+                      'Bebida',
+                      'Proteina',
+                      'Carboidrato',
+                      'Fruta',
+                      'Grão',
+                      'Doce',
+                      'Legume',
+                      'Verdura',
+                      'Outros'
+                    ],
                     (value) => setState(() => _tipoSelecionado = value),
                   ),
                   const SizedBox(height: 32),
-                  ElevatedButton(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        if (_categoriaSelecionada != null && _tipoSelecionado != null) {
-                          await AlimentosController().cadastrarAlimento(
-                            nome: _nomeController.text,
-                            tipo: _tipoSelecionado!,
-                            categoria: _categoriaSelecionada!,
-                            foto: _imagePath,
-                            userId: userProviderId.userId!,
-                          );
+                  SizedBox(
+                    width: double.maxFinite,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          if (_categoriaSelecionada != null &&
+                              _tipoSelecionado != null) {
+                            try {
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              final userId = prefs.getInt('userId');
 
-                          Navigator.pop(context);
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Selecione uma categoria e um tipo.'),
-                            ),
-                          );
+                              if (userId != null) {
+                                await AlimentosController().cadastrarAlimento(
+                                  nome: _nomeController.text,
+                                  tipo: _tipoSelecionado!,
+                                  categoria: _categoriaSelecionada!,
+                                  foto: _imagePath,
+                                  userId: userId,
+                                );
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                        "Alimento cadastrado com sucesso!"),
+                                  ),
+                                );
+
+                                _clearFields();
+                              } else {
+                                throw Exception("ID do usuário não encontrado.");
+                              }
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content:
+                                      Text("Erro ao cadastrar alimento: $e"),
+                                ),
+                              );
+                            }
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content:
+                                    Text("Selecione uma categoria e um tipo."),
+                              ),
+                            );
+                          }
                         }
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFF46472),
-                      padding: const EdgeInsets.symmetric(horizontal: 120, vertical: 15),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFF46472),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 120, vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
-                    ),
-                    child: const Text(
-                      'Cadastrar',
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                      child: const Text(
+                        'Cadastrar',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -131,7 +174,17 @@ class _CadastroAlimentoState extends State<CadastroAlimento> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller, String hint) {
+  void _clearFields() {
+    setState(() {
+      _nomeController.clear();
+      _categoriaSelecionada = null;
+      _tipoSelecionado = null;
+      _imagePath = null;
+    });
+  }
+
+  Widget _buildTextField(
+      String label, TextEditingController controller, String hint) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -150,7 +203,8 @@ class _CadastroAlimentoState extends State<CadastroAlimento> {
             filled: true,
             fillColor: Colors.white,
           ),
-          validator: (value) => value == null || value.isEmpty ? 'Campo obrigatório' : null,
+          validator: (value) =>
+              value == null || value.isEmpty ? 'Campo obrigatório' : null,
         ),
       ],
     );

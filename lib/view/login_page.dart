@@ -1,11 +1,9 @@
 import 'dart:convert';
-import 'package:aplicativo_nutricao/context/user_context.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto/crypto.dart';
 import 'package:aplicativo_nutricao/data/database_helper.dart';
 import 'package:aplicativo_nutricao/view/cadastro_usuario_page.dart';
 import 'package:aplicativo_nutricao/view/home_page.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
@@ -44,8 +42,6 @@ class _LoginPageState extends State<LoginPage> {
             final userId = usuario.first['id'];
 
             await _saveUserId(userId);
-
-            Provider.of<UserProvider>(context, listen: false).setUserId(userId);
 
             Navigator.pushReplacement(
               context,
