@@ -164,9 +164,10 @@ class Database {
 
     final List<Map<String, dynamic>> alimentos = await database.query(
       'alimentos',
-      columns: ['id', 'nome'],
+      columns: ['id', 'nome', 'tipo', 'foto'],
       where: 'categoria = ?',
       whereArgs: [categoria],
+      orderBy: 'nome ASC',
     );
 
     return alimentos;
