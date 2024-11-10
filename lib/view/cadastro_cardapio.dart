@@ -29,6 +29,20 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
   final ScrollController _almocoScrollController = ScrollController();
   final ScrollController _jantaScrollController = ScrollController();
 
+  String searchQuery = '';
+
+  List<Map<String, dynamic>> get filteredUsuarios {
+    if (searchQuery.isEmpty) {
+      return usuarios;
+    } else {
+      return usuarios.where((usuario) {
+        return usuario['nome']
+            .toLowerCase()
+            .contains(searchQuery.toLowerCase());
+      }).toList();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -60,7 +74,7 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(0.0),
             child: ConstrainedBox(
               constraints: BoxConstraints(maxWidth: 600),
               child: Column(
@@ -85,6 +99,8 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
                             'Novo cardápio',
@@ -213,7 +229,7 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
         ),
         const SizedBox(height: 5),
         GestureDetector(
-          onTap: () => _showUsuarioDropdown(),
+          onTap: _showUsuarioDropdown,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
@@ -224,10 +240,12 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(selectedUsuarioId == null
-                    ? 'Selecione um usuário'
-                    : usuarios.firstWhere((usuario) =>
-                        usuario['id'] == selectedUsuarioId)['nome']),
+                Text(
+                  selectedUsuarioId == null
+                      ? 'Selecione um usuário'
+                      : usuarios.firstWhere((usuario) =>
+                          usuario['id'] == selectedUsuarioId)['nome'],
+                ),
                 const Icon(Icons.arrow_drop_down),
               ],
             ),
@@ -238,79 +256,62 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
   }
 
   void _showUsuarioDropdown() {
-    String searchQuery = '';
-
-    List<Map<String, dynamic>> _filteredUsuarios() {
-      if (searchQuery.isEmpty) {
-        return usuarios;
-      } else {
-        return usuarios.where((usuario) {
-          return usuario['nome']
-              .toLowerCase()
-              .contains(searchQuery.toLowerCase());
-        }).toList();
-      }
-    }
-
     showDialog(
       context: context,
       builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            final filteredUsuarios = _filteredUsuarios();
-            return AlertDialog(
-              title: const Text('Selecione um usuário'),
-              content: SizedBox(
-                width: double.maxFinite,
-                child: Column(
-                  children: [
-                    TextField(
-                      decoration: const InputDecoration(
-                        hintText: 'Buscar usuário',
-                        prefixIcon: Icon(Icons.search),
-                      ),
-                      onChanged: (value) {
-                        setState(() {
-                          searchQuery = value;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: Scrollbar(
-                        thumbVisibility: true,
-                        thickness: 6.0,
-                        radius: const Radius.circular(8),
-                        scrollbarOrientation: ScrollbarOrientation.right,
-                        controller: _usuarioScrollController,
-                        child: filteredUsuarios.isEmpty
-                            ? Center(
-                                child: Text(
-                                  'Nenhum usuário encontrado.',
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                              )
-                            : ListView(
-                                controller: _usuarioScrollController,
-                                children: filteredUsuarios.map((usuario) {
-                                  return ListTile(
-                                    title: Text(usuario['nome']),
-                                    onTap: () {
-                                      setState(() {
-                                        selectedUsuarioId = usuario['id'];
-                                      });
-                                      Navigator.of(context).pop();
-                                    },
-                                  );
-                                }).toList(),
-                              ),
-                      ),
-                    ),
-                  ],
+        return AlertDialog(
+          title: const Text('Selecione um usuário'),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  decoration: const InputDecoration(
+                    hintText: 'Buscar usuário',
+                    prefixIcon: Icon(Icons.search),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      searchQuery = value;
+                    });
+                  },
                 ),
-              ),
-            );
-          },
+                const SizedBox(height: 10),
+                Expanded(
+                  child: Scrollbar(
+                    thumbVisibility: true,
+                    thickness: 6.0,
+                    radius: const Radius.circular(8),
+                    scrollbarOrientation: ScrollbarOrientation.right,
+                    child: filteredUsuarios.isEmpty
+                        ? Center(
+                            child: Text(
+                              'Nenhum usuário encontrado.',
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          )
+                        : ListView(
+                            controller: _usuarioScrollController,
+                            children: filteredUsuarios.map((usuario) {
+                              return ListTile(
+                                title: Text(usuario['nome']),
+                                onTap: () {
+                                  setState(() {
+                                    selectedUsuarioId = usuario['id'];
+                                    searchQuery =
+                                        ''; // Limpar a busca ao selecionar
+                                  });
+                                  Navigator.of(context).pop();
+                                },
+                              );
+                            }).toList(),
+                          ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         );
       },
     );
@@ -365,9 +366,7 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
                       borderSide: BorderSide(color: Colors.black),
                     ),
                     focusedBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide(
-                          color: Colors.black,
-                          width: 2), // Cor e espessura da linha quando focado
+                      borderSide: BorderSide(color: Colors.black, width: 2),
                     ),
                   ),
                   onChanged: filterOptions,
