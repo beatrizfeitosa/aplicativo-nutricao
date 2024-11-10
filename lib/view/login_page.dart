@@ -1,11 +1,10 @@
 import 'dart:convert';
-import 'package:aplicativo_nutricao/context/user_context.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto/crypto.dart';
 import 'package:aplicativo_nutricao/data/database_helper.dart';
 import 'package:aplicativo_nutricao/view/cadastro_usuario_page.dart';
 import 'package:aplicativo_nutricao/view/home_page.dart';
-import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -24,6 +23,11 @@ class _LoginPageState extends State<LoginPage> {
     return sha256.convert(passwordInBytes).toString();
   }
 
+  Future<void> _saveUserId(int userId) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt('userId', userId);
+  }
+
   void _login() async {
     if (_formKey.currentState!.validate()) {
       final email = _emailController.text;
@@ -35,10 +39,9 @@ class _LoginPageState extends State<LoginPage> {
         if (usuario.isNotEmpty) {
           final senhaBanco = usuario.first['senha'];
           if (senhaBanco == senhaHash) {
-
             final userId = usuario.first['id'];
-            Provider.of<UserProvider>(context, listen: false).setUserId(userId);
 
+            await _saveUserId(userId);
 
             Navigator.pushReplacement(
               context,
@@ -57,7 +60,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -81,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
                   const Text(
                     "Login",
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 32,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -91,14 +95,20 @@ class _LoginPageState extends State<LoginPage> {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       'Email',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
+                  const SizedBox(height: 5),
                   TextFormField(
                     controller: _emailController,
                     decoration: const InputDecoration(
                       hintText: 'Digite email',
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12))),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black, width: 2),
+                          borderRadius: BorderRadius.all(Radius.circular(12))),
                       filled: true,
                       fillColor: Colors.white,
                     ),
@@ -106,7 +116,8 @@ class _LoginPageState extends State<LoginPage> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Por favor, insira seu email';
-                      } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                      } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
+                          .hasMatch(value)) {
                         return 'Email inválido';
                       }
                       return null;
@@ -118,14 +129,20 @@ class _LoginPageState extends State<LoginPage> {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       'Senha',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
+                  const SizedBox(height: 5),
                   TextFormField(
                     controller: _passwordController,
                     decoration: const InputDecoration(
                       hintText: 'Digite senha',
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12))),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black, width: 2),
+                          borderRadius: BorderRadius.all(Radius.circular(12))),
                       filled: true,
                       fillColor: Colors.white,
                     ),
@@ -139,16 +156,31 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(height: 32),
                   // Botão de Login
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.redAccent,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 16),
-                      textStyle: const TextStyle(fontSize: 18),
+                  SizedBox(
+                    width: double.maxFinite,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFFF46472),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              12), // Definindo o borderRadius de 12
+                        ),
+                      ),
+                      onPressed: () => _login(),
+                      child: Text(
+                        'Login',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
                     ),
-                    onPressed: _login,
-                    child: const Text('Entrar'),
                   ),
+
                   const SizedBox(height: 16),
                   // Botão de Cadastro
                   TextButton(

@@ -59,7 +59,6 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
 
   @override
   void dispose() {
-    // Disposing ScrollControllers
     _usuarioScrollController.dispose();
     _cafeScrollController.dispose();
     _almocoScrollController.dispose();
@@ -111,7 +110,7 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
                             ),
                           ),
                           const SizedBox(height: 24),
-                          _buildUsuarioDropdown(),
+                          _buildUsuarioDropdown(_usuarioScrollController),
                           const SizedBox(height: 16),
                           _buildExpansionTile(
                             title: 'Opções para o café',
@@ -219,7 +218,7 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
     );
   }
 
-  Widget _buildUsuarioDropdown() {
+  Widget _buildUsuarioDropdown(scrollController) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -229,7 +228,7 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
         ),
         const SizedBox(height: 5),
         GestureDetector(
-          onTap: _showUsuarioDropdown,
+          onTap: () => {_showUsuarioDropdown(scrollController)},
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
@@ -255,63 +254,70 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
     );
   }
 
-  void _showUsuarioDropdown() {
+  void _showUsuarioDropdown(ScrollController scrollController) {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const Text('Selecione um usuário'),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  decoration: const InputDecoration(
-                    hintText: 'Buscar usuário',
-                    prefixIcon: Icon(Icons.search),
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      searchQuery = value;
-                    });
-                  },
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('Selecione um usuário'),
+              content: SizedBox(
+                width: double.maxFinite,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      decoration: const InputDecoration(
+                        hintText: 'Buscar usuário',
+                        prefixIcon: Icon(Icons.search),
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          searchQuery = value;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: Scrollbar(
+                        thumbVisibility: true,
+                        thickness: 6.0,
+                        radius: const Radius.circular(8),
+                        scrollbarOrientation: ScrollbarOrientation.right,
+                        controller: scrollController,
+                        child: filteredUsuarios.isEmpty
+                            ? Center(
+                                child: Text(
+                                  'Nenhum usuário encontrado.',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                              )
+                            : ListView(
+                                controller: scrollController,
+                                children: filteredUsuarios.map((usuario) {
+                                  return ListTile(
+                                    title: Text(usuario['nome']),
+                                    onTap: () {
+                                      setState(() {
+                                        searchQuery =
+                                            '';
+                                      });
+                                      Navigator.of(context).pop();
+                                      this.setState(() {
+                                        selectedUsuarioId = usuario['id'];
+                                      });
+                                    },
+                                  );
+                                }).toList(),
+                              ),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 10),
-                Expanded(
-                  child: Scrollbar(
-                    thumbVisibility: true,
-                    thickness: 6.0,
-                    radius: const Radius.circular(8),
-                    scrollbarOrientation: ScrollbarOrientation.right,
-                    child: filteredUsuarios.isEmpty
-                        ? Center(
-                            child: Text(
-                              'Nenhum usuário encontrado.',
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                          )
-                        : ListView(
-                            controller: _usuarioScrollController,
-                            children: filteredUsuarios.map((usuario) {
-                              return ListTile(
-                                title: Text(usuario['nome']),
-                                onTap: () {
-                                  setState(() {
-                                    selectedUsuarioId = usuario['id'];
-                                    searchQuery =
-                                        ''; // Limpar a busca ao selecionar
-                                  });
-                                  Navigator.of(context).pop();
-                                },
-                              );
-                            }).toList(),
-                          ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         );
       },
     );

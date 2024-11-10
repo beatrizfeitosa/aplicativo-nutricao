@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:aplicativo_nutricao/view/login_page.dart';
 import 'package:aplicativo_nutricao/view/cadastro_page.dart';
 import 'package:aplicativo_nutricao/view/creditos_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -227,12 +228,16 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  logout() {
+  logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+
     Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const LoginPage(),
-        ),
-        (route) => false);
+      context,
+      MaterialPageRoute(
+        builder: (context) => const LoginPage(),
+      ),
+      (route) => false,
+    );
   }
 }
