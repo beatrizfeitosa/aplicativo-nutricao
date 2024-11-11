@@ -143,19 +143,33 @@ class Database {
   }
 
   static Future<List<Map<String, dynamic>>> retornaIdsENomesUsuarios() async {
-  final database = await Database.database();
+    final database = await Database.database();
 
-  final List<Map<String, dynamic>> usuarios = await database.query(
-    'usuarios',
-    columns: ['id', 'nome'],
-  );
+    final List<Map<String, dynamic>> usuarios = await database.query(
+      'usuarios',
+      columns: ['id', 'nome'],
+    );
 
-  return usuarios;
-}
+    return usuarios;
+  }
 
   static Future<List<Map<String, dynamic>>> retornaAlimentos() async {
     final database = await Database.database();
     return database.query('alimentos');
+  }
+
+  static Future<List<Map<String, dynamic>>> retornaAlimentosPorId(
+      int id) async {
+    final database = await Database.database();
+
+    final List<Map<String, dynamic>> alimento = await database.query(
+      'alimentos',
+      columns: ['id', 'nome', 'tipo', 'categoria', 'foto', 'userId'],
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    return alimento;
   }
 
   static Future<List<Map<String, dynamic>>> retornaAlimentosPorCategoria(
@@ -164,16 +178,17 @@ class Database {
 
     final List<Map<String, dynamic>> alimentos = await database.query(
       'alimentos',
-      columns: ['id', 'nome'],
+      columns: ['id', 'nome', 'tipo', 'foto'],
       where: 'categoria = ?',
       whereArgs: [categoria],
+      orderBy: 'nome ASC',
     );
 
     return alimentos;
   }
 
-  // Retorna detalhes de um cardápio específico pelo ID
-  static Future<List<Map<String, dynamic>>> retornaCardapio(int cardapioId) async {
+  static Future<List<Map<String, dynamic>>> retornaCardapio(
+      int cardapioId) async {
     final database = await Database.database();
     return database.query(
       'cardapios',
@@ -183,18 +198,72 @@ class Database {
     );
   }
 
-  // Retorna alimentos associados a um cardápio específico
-  static Future<List<Map<String, dynamic>>> retornaCardapioAlimentos(int cardapioId) async {
+  static Future<List<Map<String, dynamic>>> retornaCardapioAlimentos(
+      int cardapioId) async {
     final database = await Database.database();
 
-    // Fazendo uma consulta usando JOIN para pegar os alimentos associados ao cardápio
     final List<Map<String, dynamic>> alimentos = await database.rawQuery("""
-      SELECT a.id, a.nome, a.categoria, a.tipo 
+      SELECT a.id, a.nome, a.categoria, a.tipo, a.foto
       FROM cardapios_alimentos ca
       JOIN alimentos a ON ca.alimento_id = a.id
       WHERE ca.cardapio_id = ?
     """, [cardapioId]);
 
     return alimentos;
+  }
+
+  static Future<Map<String, dynamic>> retornaDetalhesUsuario(String id) async {
+    final database = await Database.database();
+
+    final List<Map<String, dynamic>> result = await database.query(
+      'usuarios',
+      where: 'id = ?',
+      whereArgs: [id],
+      limit: 1,
+    );
+
+    if (result.isNotEmpty) {
+      return result.first;
+    } else {
+      throw Exception('Usuário não encontrado');
+    }
+  }
+
+  static Future<List<Map<String, dynamic>>> buscaGeral(String termo) async {
+    final database = await Database.database();
+    final termoLower = '%${termo.toLowerCase()}%';
+
+    final result = await database.rawQuery('''
+    SELECT 'usuario' AS tipo, id, nome, NULL AS categoria, NULL AS tipo_alimento, NULL AS userId, foto, NULL AS autor
+    FROM usuarios
+    WHERE LOWER(nome) LIKE ?
+
+    UNION ALL
+
+    SELECT 'alimento' AS tipo, a.id, a.nome, a.categoria, a.tipo AS tipo_alimento, a.userId, a.foto, u.nome AS autor
+    FROM alimentos a
+    JOIN usuarios u ON u.id = a.userId
+    WHERE LOWER(a.nome) LIKE ? OR LOWER(a.categoria) LIKE ? OR a.userId IN (
+      SELECT id FROM usuarios WHERE LOWER(nome) LIKE ?
+    )
+
+    UNION ALL
+
+    SELECT DISTINCT 'cardapio' AS tipo, c.id, NULL AS nome, NULL AS categoria, NULL AS tipo_alimento, c.userId, NULL AS foto, u.nome AS autor
+    FROM cardapios c
+    JOIN usuarios u ON u.id = c.userId
+    LEFT JOIN cardapios_alimentos ca ON ca.cardapio_id = c.id
+    LEFT JOIN alimentos a ON a.id = ca.alimento_id
+    WHERE LOWER(u.nome) LIKE ? OR LOWER(a.nome) LIKE ?
+  ''', [
+      termoLower,
+      termoLower,
+      termoLower,
+      termoLower,
+      termoLower,
+      termoLower,
+    ]);
+
+    return result;
   }
 }

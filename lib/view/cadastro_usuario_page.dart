@@ -34,7 +34,8 @@ class _CadastroUsuarioPageState extends State<CadastroUsuarioPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Align(
-                    alignment: Alignment.centerLeft, // Alinha o botão à esquerda
+                    alignment:
+                        Alignment.centerLeft,
                     child: IconButton(
                       icon: const Icon(Icons.arrow_back),
                       onPressed: () {
@@ -45,12 +46,11 @@ class _CadastroUsuarioPageState extends State<CadastroUsuarioPage> {
                   const Text(
                     "Cadastro",
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 32,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 16),
-
                   GestureDetector(
                     onTap: _selectImage,
                     child: _imagePath != null
@@ -65,19 +65,24 @@ class _CadastroUsuarioPageState extends State<CadastroUsuarioPage> {
                           ),
                   ),
                   const SizedBox(height: 32),
-
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
                       'Nome',
-                      style: TextStyle(fontSize: 16),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
+                  const SizedBox(height: 5),
                   TextFormField(
                     controller: _nomeController,
                     decoration: const InputDecoration(
                       hintText: 'Digite seu nome',
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12))),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black, width: 2),
+                          borderRadius: BorderRadius.all(Radius.circular(12))),
                       filled: true,
                       fillColor: Colors.white,
                     ),
@@ -90,19 +95,24 @@ class _CadastroUsuarioPageState extends State<CadastroUsuarioPage> {
                     maxLines: 1,
                   ),
                   const SizedBox(height: 16),
-
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
                       'Data de Nascimento',
-                      style: TextStyle(fontSize: 16),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
+                  const SizedBox(height: 5),
                   TextFormField(
                     controller: _dataNascimentoController,
                     decoration: const InputDecoration(
                       hintText: '__/__/____',
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12))),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black, width: 2),
+                          borderRadius: BorderRadius.all(Radius.circular(12))),
                       filled: true,
                       fillColor: Colors.white,
                     ),
@@ -116,19 +126,24 @@ class _CadastroUsuarioPageState extends State<CadastroUsuarioPage> {
                     maxLines: 1,
                   ),
                   const SizedBox(height: 16),
-
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
                       'Email',
-                      style: TextStyle(fontSize: 16),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
+                  const SizedBox(height: 5),
                   TextFormField(
                     controller: _emailController,
                     decoration: const InputDecoration(
                       hintText: 'Digite seu email',
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12))),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black, width: 2),
+                          borderRadius: BorderRadius.all(Radius.circular(12))),
                       filled: true,
                       fillColor: Colors.white,
                     ),
@@ -136,7 +151,8 @@ class _CadastroUsuarioPageState extends State<CadastroUsuarioPage> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Por favor, insira seu email';
-                      } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                      } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
+                          .hasMatch(value)) {
                         return 'Email inválido';
                       }
                       return null;
@@ -144,19 +160,24 @@ class _CadastroUsuarioPageState extends State<CadastroUsuarioPage> {
                     maxLines: 1,
                   ),
                   const SizedBox(height: 16),
-
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
                       'Senha',
-                      style: TextStyle(fontSize: 16),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
+                  const SizedBox(height: 5),
                   TextFormField(
                     controller: _senhaController,
                     decoration: const InputDecoration(
                       hintText: 'Digite sua senha',
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12))),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black, width: 2),
+                          borderRadius: BorderRadius.all(Radius.circular(12))),
                       filled: true,
                       fillColor: Colors.white,
                     ),
@@ -170,19 +191,24 @@ class _CadastroUsuarioPageState extends State<CadastroUsuarioPage> {
                     maxLines: 1,
                   ),
                   const SizedBox(height: 16),
-
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
                       'Confirmar Senha',
-                      style: TextStyle(fontSize: 16),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
+                  const SizedBox(height: 5),
                   TextFormField(
                     controller: _confirmarSenhaController,
                     decoration: const InputDecoration(
                       hintText: 'Confirme sua senha',
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12))),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black, width: 2),
+                          borderRadius: BorderRadius.all(Radius.circular(12))),
                       filled: true,
                       fillColor: Colors.white,
                     ),
@@ -198,37 +224,46 @@ class _CadastroUsuarioPageState extends State<CadastroUsuarioPage> {
                     maxLines: 1,
                   ),
                   const SizedBox(height: 32),
-
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.redAccent,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 80, vertical: 16),
-                      textStyle: const TextStyle(fontSize: 18),
+                  SizedBox(
+                    width: double.maxFinite,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFFF46472),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                      ),
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          UsuariosController()
+                              .cadastrarUsuario(
+                                nome: _nomeController.text,
+                                dataNascimento: _dataNascimentoController.text,
+                                email: _emailController.text,
+                                senha: _senhaController.text,
+                                imagePath: _imagePath,
+                              )
+                              .then((data) {});
+                          _showSnackBar('Usuário cadastrado com sucesso.');
+                          Future.delayed(Duration(seconds: 2), () {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginPage(),
+                              ),
+                              (route) => false,
+                            );
+                          });
+                        }
+                      },
+                      child: const Text(
+                        'Cadastrar',
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w900),
+                      ),
                     ),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        UsuariosController().cadastrarUsuario(
-                          nome: _nomeController.text,
-                          dataNascimento: _dataNascimentoController.text,
-                          email: _emailController.text,
-                          senha: _senhaController.text,
-                          imagePath: _imagePath,
-                        ).then((data){});
-                        _showSnackBar('Usuário cadastrado com sucesso.');
-                        Future.delayed(Duration(seconds: 2),() {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const LoginPage(),
-                            ),
-                            (route) => false,
-                          );
-                        });
-                      }
-                    },
-                    child: const Text('Cadastrar'),
                   ),
                 ],
               ),
@@ -240,7 +275,10 @@ class _CadastroUsuarioPageState extends State<CadastroUsuarioPage> {
   }
 
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message), duration: Duration(seconds: 2),));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(message),
+      duration: Duration(seconds: 2),
+    ));
   }
 
   void _selectImage() async {
