@@ -206,7 +206,7 @@ class Database {
 
     // Fazendo uma consulta usando JOIN para pegar os alimentos associados ao cardápio
     final List<Map<String, dynamic>> alimentos = await database.rawQuery("""
-      SELECT a.id, a.nome, a.categoria, a.tipo 
+      SELECT a.id, a.nome, a.categoria, a.tipo, a.foto
       FROM cardapios_alimentos ca
       JOIN alimentos a ON ca.alimento_id = a.id
       WHERE ca.cardapio_id = ?
