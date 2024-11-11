@@ -53,7 +53,8 @@ class _DetalharAlimentoPageState extends State<DetalharAlimentoPage> {
       RenderRepaintBoundary boundary =
           _shareKey.currentContext?.findRenderObject() as RenderRepaintBoundary;
       ui.Image image = await boundary.toImage();
-      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
 
       _shareHelper.shareImage(pngBytes, "alimento", "Detalhes do alimento");
@@ -66,7 +67,12 @@ class _DetalharAlimentoPageState extends State<DetalharAlimentoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detalhes do Alimento'),
+        title: Text(
+          'Detalhes do Alimento',
+          style: TextStyle(
+            fontWeight: FontWeight.bold, // Título da AppBar em negrito
+          ),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
@@ -87,7 +93,8 @@ class _DetalharAlimentoPageState extends State<DetalharAlimentoPage> {
         child: Container(
           color: Color(0xFFE3ECF8),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
             child: FutureBuilder<Map<String, dynamic>>(
               future: _alimentoDetails,
               builder: (context, snapshot) {
@@ -102,7 +109,8 @@ class _DetalharAlimentoPageState extends State<DetalharAlimentoPage> {
                   return FutureBuilder<String>(
                     future: _nomeUsuario,
                     builder: (context, userSnapshot) {
-                      if (userSnapshot.connectionState == ConnectionState.waiting) {
+                      if (userSnapshot.connectionState ==
+                          ConnectionState.waiting) {
                         return Center(child: CircularProgressIndicator());
                       } else if (userSnapshot.hasError) {
                         return Center(
@@ -112,7 +120,18 @@ class _DetalharAlimentoPageState extends State<DetalharAlimentoPage> {
                             userSnapshot.data ?? 'Usuário desconhecido';
                         return ListView(
                           children: [
-                            alimento['foto'] != null && alimento['foto'].isNotEmpty
+                            Text(
+                              'Alimento',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 28,
+                                color: Colors.black,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 16),
+                            alimento['foto'] != null &&
+                                    alimento['foto'].isNotEmpty
                                 ? ClipRRect(
                                     borderRadius: BorderRadius.circular(16),
                                     child: Image.memory(
@@ -145,7 +164,7 @@ class _DetalharAlimentoPageState extends State<DetalharAlimentoPage> {
               },
             ),
           ),
-          ),
+        ),
       ),
       backgroundColor: Color(0xFFE3ECF8),
     );

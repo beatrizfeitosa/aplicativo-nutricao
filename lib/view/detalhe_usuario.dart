@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:aplicativo_nutricao/controllers/busca_controller.dart';
+import 'package:aplicativo_nutricao/utils/format_date.dart';
 
 class DetalharUsuarioPage extends StatefulWidget {
   final String id;
@@ -36,7 +37,12 @@ class _DetalharUsuarioPageState extends State<DetalharUsuarioPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detalhes do Usuário'),
+        title: Text(
+          'Detalhes do Usuário',
+          style: TextStyle(
+            fontWeight: FontWeight.bold, // Título da AppBar em negrito
+          ),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
@@ -59,6 +65,7 @@ class _DetalharUsuarioPageState extends State<DetalharUsuarioPage> {
               return Center(child: Text('Nenhum detalhe encontrado.'));
             } else {
               var usuario = snapshot.data!;
+              String dataFormatada = formatarData(usuario['createdAt']);
               return ListView(
                 children: [
                   // Foto do usuário
@@ -87,7 +94,7 @@ class _DetalharUsuarioPageState extends State<DetalharUsuarioPage> {
                   _buildInfoText('Email', usuario['email']),
                   _buildInfoText(
                       'Data de Nascimento', usuario['data_nascimento']),
-                  _buildInfoText('Data de Cadastro', usuario['createdAt']),
+                  _buildInfoText('Data de Cadastro', dataFormatada),
                 ],
               );
             }
