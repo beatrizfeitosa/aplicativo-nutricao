@@ -23,7 +23,6 @@ class _NovoCardapioPageState extends State<NovoCardapioPage> {
   List<int> selectedAlmocoIds = [];
   List<int> selectedJantaIds = [];
 
-  // Adicionando ScrollControllers
   final ScrollController _usuarioScrollController = ScrollController();
   final ScrollController _cafeScrollController = ScrollController();
   final ScrollController _almocoScrollController = ScrollController();

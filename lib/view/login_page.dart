@@ -43,6 +43,8 @@ class _LoginPageState extends State<LoginPage> {
 
             await _saveUserId(userId);
 
+            if (!mounted) return;
+
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => const HomePage()),
@@ -90,7 +92,6 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 32),
-                  // Campo de Email
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -124,7 +125,6 @@ class _LoginPageState extends State<LoginPage> {
                     },
                   ),
                   const SizedBox(height: 16),
-                  // Campo de Senha
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -155,7 +155,6 @@ class _LoginPageState extends State<LoginPage> {
                     },
                   ),
                   const SizedBox(height: 32),
-                  // Botão de Login
                   SizedBox(
                     width: double.maxFinite,
                     child: ElevatedButton(
@@ -166,7 +165,7 @@ class _LoginPageState extends State<LoginPage> {
                             horizontal: 16, vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
-                              12), // Definindo o borderRadius de 12
+                              12),
                         ),
                       ),
                       onPressed: () => _login(),
@@ -182,7 +181,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
 
                   const SizedBox(height: 16),
-                  // Botão de Cadastro
                   TextButton(
                     onPressed: () {
                       Navigator.push(

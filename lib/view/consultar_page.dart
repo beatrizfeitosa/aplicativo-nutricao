@@ -104,7 +104,7 @@ class _ConsultaPageState extends State<ConsultaPage> {
                       final item = _buscaController.resultados[index];
                       return _buildListItem(
                         title: item['nome'] ??
-                            'Cardápio', // Gambiarra enquanto cardápio não tem o campo nome
+                            'Cardápio',
                         subtitle: item['tipo'] ?? 'Desconhecido',
                         foto: item['foto'] as List<int>?,
                         autor: item['autor'] ?? 'Sem autor',

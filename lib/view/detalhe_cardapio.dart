@@ -8,17 +8,16 @@ import 'dart:ui' as ui;
 class DetalharCardapioPage extends StatefulWidget {
   final int cardapioId;
 
-  DetalharCardapioPage({required this.cardapioId});
+  const DetalharCardapioPage({super.key, required this.cardapioId});
 
   @override
-  _DetalharCardapioPageState createState() => _DetalharCardapioPageState();
+  DetalharCardapioPageState createState() => DetalharCardapioPageState();
 }
 
-class _DetalharCardapioPageState extends State<DetalharCardapioPage> {
+class DetalharCardapioPageState extends State<DetalharCardapioPage> {
   late Future<List<Map<String, dynamic>>> _alimentos;
   final ShareHelper _shareHelper = ShareHelper();
   final GlobalKey _shareKey = GlobalKey();
-  double _totalHeight = 0.0;
 
   @override
   void initState() {
@@ -28,9 +27,7 @@ class _DetalharCardapioPageState extends State<DetalharCardapioPage> {
 
   Future<void> _calculateHeight() async {
     await Future.delayed(Duration(milliseconds: 300));
-    RenderBox box = _shareKey.currentContext?.findRenderObject() as RenderBox;
     setState(() {
-      _totalHeight = box.size.height;
     });
   }
 
@@ -47,7 +44,12 @@ class _DetalharCardapioPageState extends State<DetalharCardapioPage> {
 
       _shareHelper.shareImage(pngBytes, "cardapio", "Detalhes do cardápio");
     } catch (e) {
-      print("Erro ao capturar imagem: $e");
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Erro ao compartilhar cardapio: $e"),
+        ),
+      );
     }
   }
 
@@ -89,7 +91,7 @@ class _DetalharCardapioPageState extends State<DetalharCardapioPage> {
         title: Text(
           'Detalhes do Cardápio',
           style: TextStyle(
-            fontWeight: FontWeight.bold, // Título da AppBar em negrito
+            fontWeight: FontWeight.bold,
           ),
         ),
         backgroundColor: Colors.transparent,
@@ -128,8 +130,7 @@ class _DetalharCardapioPageState extends State<DetalharCardapioPage> {
                       ),
                     ),
                   ),
-                  // Adicione o título aqui
-                  SizedBox(height: 16), // Espaço entre o título e o conteúdo
+                  SizedBox(height: 16),
                   FutureBuilder<List<Map<String, dynamic>>>(
                     future: _alimentos,
                     builder: (context, snapshot) {
@@ -167,8 +168,7 @@ class _DetalharCardapioPageState extends State<DetalharCardapioPage> {
                               ),
                               ...alimentos
                                   .map((alimento) =>
-                                      _buildAlimentoItem(alimento))
-                                  .toList(),
+                                      _buildAlimentoItem(alimento)),
                             ],
                           );
                         }).toList(),

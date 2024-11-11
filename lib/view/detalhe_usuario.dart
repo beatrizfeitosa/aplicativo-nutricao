@@ -5,13 +5,13 @@ import 'package:aplicativo_nutricao/utils/format_date.dart';
 class DetalharUsuarioPage extends StatefulWidget {
   final String id;
 
-  DetalharUsuarioPage({required this.id});
+  const DetalharUsuarioPage({super.key, required this.id});
 
   @override
-  _DetalharUsuarioPageState createState() => _DetalharUsuarioPageState();
+  DetalharUsuarioPageState createState() => DetalharUsuarioPageState();
 }
 
-class _DetalharUsuarioPageState extends State<DetalharUsuarioPage> {
+class DetalharUsuarioPageState extends State<DetalharUsuarioPage> {
   late Future<Map<String, dynamic>> _usuarioDetails;
 
   @override
@@ -22,11 +22,7 @@ class _DetalharUsuarioPageState extends State<DetalharUsuarioPage> {
 
   Future<Map<String, dynamic>> _getUsuarioDetails() async {
     try {
-      print("Buscando detalhes do usuário com ID: ${widget.id}");
       var usuario = await BuscaController().buscaDetalhesUsuario(widget.id);
-      if (usuario == null) {
-        throw Exception('Usuário não encontrado');
-      }
       return usuario;
     } catch (e) {
       throw Exception('Erro ao carregar os detalhes: $e');
@@ -40,7 +36,7 @@ class _DetalharUsuarioPageState extends State<DetalharUsuarioPage> {
         title: Text(
           'Detalhes do Usuário',
           style: TextStyle(
-            fontWeight: FontWeight.bold, // Título da AppBar em negrito
+            fontWeight: FontWeight.bold,
           ),
         ),
         backgroundColor: Colors.transparent,
@@ -68,7 +64,6 @@ class _DetalharUsuarioPageState extends State<DetalharUsuarioPage> {
               String dataFormatada = formatarData(usuario['createdAt']);
               return ListView(
                 children: [
-                  // Foto do usuário
                   usuario['foto'] != null && usuario['foto'].isNotEmpty
                       ? ClipRRect(
                           borderRadius: BorderRadius.circular(16),
@@ -89,7 +84,6 @@ class _DetalharUsuarioPageState extends State<DetalharUsuarioPage> {
                               Icon(Icons.person, color: Colors.white, size: 80),
                         ),
                   SizedBox(height: 24),
-                  // Informações do usuário
                   _buildInfoText('Nome', usuario['nome']),
                   _buildInfoText('Email', usuario['email']),
                   _buildInfoText(

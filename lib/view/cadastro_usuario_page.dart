@@ -35,7 +35,7 @@ class _CadastroUsuarioPageState extends State<CadastroUsuarioPage> {
                 children: [
                   Align(
                     alignment:
-                        Alignment.centerLeft, // Alinha o botão à esquerda
+                        Alignment.centerLeft,
                     child: IconButton(
                       icon: const Icon(Icons.arrow_back),
                       onPressed: () {

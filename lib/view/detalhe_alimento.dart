@@ -8,13 +8,13 @@ import 'package:flutter/rendering.dart';
 class DetalharAlimentoPage extends StatefulWidget {
   final String id;
 
-  DetalharAlimentoPage({required this.id});
+  const DetalharAlimentoPage({super.key, required this.id});
 
   @override
-  _DetalharAlimentoPageState createState() => _DetalharAlimentoPageState();
+  DetalharAlimentoPageState createState() => DetalharAlimentoPageState();
 }
 
-class _DetalharAlimentoPageState extends State<DetalharAlimentoPage> {
+class DetalharAlimentoPageState extends State<DetalharAlimentoPage> {
   late Future<Map<String, dynamic>> _alimentoDetails;
   late Future<String> _nomeUsuario;
   final ShareHelper _shareHelper = ShareHelper();
@@ -59,7 +59,12 @@ class _DetalharAlimentoPageState extends State<DetalharAlimentoPage> {
 
       _shareHelper.shareImage(pngBytes, "alimento", "Detalhes do alimento");
     } catch (e) {
-      print("Erro ao capturar imagem: $e");
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Erro ao compartilhar alimento: $e"),
+        ),
+      );
     }
   }
 
@@ -70,7 +75,7 @@ class _DetalharAlimentoPageState extends State<DetalharAlimentoPage> {
         title: Text(
           'Detalhes do Alimento',
           style: TextStyle(
-            fontWeight: FontWeight.bold, // Título da AppBar em negrito
+            fontWeight: FontWeight.bold,
           ),
         ),
         backgroundColor: Colors.transparent,

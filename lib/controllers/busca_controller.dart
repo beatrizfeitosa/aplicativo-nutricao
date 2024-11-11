@@ -8,7 +8,7 @@ class BuscaController extends ChangeNotifier {
   bool _isLoading = false;
   Timer? _debounceTimer;
   final Function(String)? showError;
-  String _lastSearchTerm = ''; // Armazena o último termo pesquisado
+  String _lastSearchTerm = '';
 
   BuscaController({this.showError}) {
     searchController.addListener(_onSearchChanged);
@@ -20,7 +20,6 @@ class BuscaController extends ChangeNotifier {
     _debounceTimer = Timer(const Duration(milliseconds: 500), () async {
       final termo = searchController.text.trim();
 
-      // Verifica se o termo é diferente do último pesquisado
       if (termo == _lastSearchTerm) {
         return;
       }
@@ -29,11 +28,10 @@ class BuscaController extends ChangeNotifier {
 
       if (termo.isNotEmpty) {
         _setLoading(true);
-        print('Loading iniciado para termo: $termo');
 
         try {
           resultados = await buscar(termo);
-          _lastSearchTerm = termo; // Atualiza o último termo pesquisado
+          _lastSearchTerm = termo;
           notifyListeners();
         } catch (e) {
           showError?.call('Erro ao buscar dados. Tente novamente.');

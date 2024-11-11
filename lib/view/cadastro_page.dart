@@ -8,7 +8,7 @@ class CadastroPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE8FFD5), // Cor de fundo verde claro
+      backgroundColor: const Color(0xFFE8FFD5),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -21,7 +21,7 @@ class CadastroPage extends StatelessWidget {
                   IconButton(
                     icon: const Icon(
                       Icons.arrow_back,
-                      size: 36, // Aumenta o tamanho do ícone
+                      size: 36,
                       color: Colors.black,
                     ),
                     onPressed: () {

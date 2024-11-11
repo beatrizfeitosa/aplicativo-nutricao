@@ -124,7 +124,7 @@ class _HomePageState extends State<HomePage> {
     Color color,
     VoidCallback onPressed,
   ) {
-    return Container(
+    return SizedBox(
       height: 110,
       width: double.infinity,
       child: OutlinedButton(
@@ -200,6 +200,8 @@ class _HomePageState extends State<HomePage> {
   logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
+
+    if (!mounted) return;
 
     Navigator.pushAndRemoveUntil(
       context,

@@ -187,7 +187,6 @@ class Database {
     return alimentos;
   }
 
-  // Retorna detalhes de um cardápio específico pelo ID
   static Future<List<Map<String, dynamic>>> retornaCardapio(
       int cardapioId) async {
     final database = await Database.database();
@@ -199,12 +198,10 @@ class Database {
     );
   }
 
-  // Retorna alimentos associados a um cardápio específico
   static Future<List<Map<String, dynamic>>> retornaCardapioAlimentos(
       int cardapioId) async {
     final database = await Database.database();
 
-    // Fazendo uma consulta usando JOIN para pegar os alimentos associados ao cardápio
     final List<Map<String, dynamic>> alimentos = await database.rawQuery("""
       SELECT a.id, a.nome, a.categoria, a.tipo, a.foto
       FROM cardapios_alimentos ca
@@ -218,7 +215,6 @@ class Database {
   static Future<Map<String, dynamic>> retornaDetalhesUsuario(String id) async {
     final database = await Database.database();
 
-    // Buscando o usuário com o ID específico
     final List<Map<String, dynamic>> result = await database.query(
       'usuarios',
       where: 'id = ?',
@@ -227,7 +223,7 @@ class Database {
     );
 
     if (result.isNotEmpty) {
-      return result.first; // Retorna o mapa com os dados do usuário
+      return result.first;
     } else {
       throw Exception('Usuário não encontrado');
     }
