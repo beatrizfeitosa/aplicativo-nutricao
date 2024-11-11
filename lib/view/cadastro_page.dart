@@ -8,7 +8,7 @@ class CadastroPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFCCFFD1), // Cor de fundo verde claro
+      backgroundColor: const Color(0xFFE8FFD5), // Cor de fundo verde claro
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -18,33 +18,15 @@ class CadastroPage extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Stack(
-                    children: [
-                      IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          size: 36, // Aumenta o tamanho do ícone
-                          color: Colors.black,
-                        ),
-                        onPressed: () {
-                          // Ação de voltar
-                        },
-                      ),
-                      Positioned(
-                        left:
-                            2, // Desloca levemente para a direita para simular "bold"
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back,
-                            size: 36,
-                            color: Colors.black,
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ),
-                    ],
+                  IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      size: 36, // Aumenta o tamanho do ícone
+                      color: Colors.black,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                   ),
                 ],
               ),

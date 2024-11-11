@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:aplicativo_nutricao/view/login_page.dart';
 import 'package:aplicativo_nutricao/view/cadastro_page.dart';
 import 'package:aplicativo_nutricao/view/creditos_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -79,7 +80,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          Container(
+          SizedBox(
             height: 100,
             width: 350,
             child: OutlinedButton(
@@ -87,7 +88,7 @@ class _HomePageState extends State<HomePage> {
                   backgroundColor: Color.fromRGBO(232, 255, 213, 1),
                   alignment: const Alignment(-1, 0),
                   side: const BorderSide(
-                      width: 2, color: const Color(0xFF000000)),
+                      width: 2, color: Color(0xFF000000)),
                   shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(20)))),
               onPressed: () {
@@ -116,7 +117,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          Container(
+          SizedBox(
             height: 100,
             width: 350,
             child: OutlinedButton(
@@ -124,7 +125,7 @@ class _HomePageState extends State<HomePage> {
                   backgroundColor: Color.fromRGBO(213, 227, 255, 1),
                   alignment: const Alignment(-1, 0),
                   side: const BorderSide(
-                      width: 2, color: const Color(0xFF000000)),
+                      width: 2, color: Color(0xFF000000)),
                   shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(20)))),
               onPressed: () {
@@ -153,7 +154,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          Container(
+          SizedBox(
             height: 100,
             width: 350,
             child: OutlinedButton(
@@ -161,7 +162,7 @@ class _HomePageState extends State<HomePage> {
                   backgroundColor: Color.fromRGBO(255, 236, 213, 1),
                   alignment: const Alignment(-1, 0),
                   side: const BorderSide(
-                      width: 2, color: const Color(0xFF000000)),
+                      width: 2, color: Color(0xFF000000)),
                   shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(20)))),
               onPressed: () {
@@ -227,12 +228,16 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  logout() {
+  logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+
     Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const LoginPage(),
-        ),
-        (route) => false);
+      context,
+      MaterialPageRoute(
+        builder: (context) => const LoginPage(),
+      ),
+      (route) => false,
+    );
   }
 }
