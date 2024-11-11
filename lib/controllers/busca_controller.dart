@@ -1,35 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:aplicativo_nutricao/data/database_helper.dart';
+import 'dart:async';
 
-class BuscaController {
+class BuscaController extends ChangeNotifier {
   final TextEditingController searchController = TextEditingController();
   List<Map<String, dynamic>> resultados = [];
   bool _isLoading = false;
-
-  // Callback para exibir mensagens de erro
+  Timer? _debounceTimer;
   final Function(String)? showError;
+  String _lastSearchTerm = ''; // Armazena o último termo pesquisado
 
   BuscaController({this.showError}) {
     searchController.addListener(_onSearchChanged);
   }
 
-  void _onSearchChanged() async {
-    final termo = searchController.text.trim();
+  void _onSearchChanged() {
+    _debounceTimer?.cancel();
 
-    if (_isLoading) return;
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () async {
+      final termo = searchController.text.trim();
 
-    if (termo.isNotEmpty) {
-      _isLoading = true;
-      try {
-        resultados = await buscar(termo);
-      } catch (e) {
-        showError?.call('Erro ao buscar dados. Tente novamente.');
-      } finally {
-        _isLoading = false;
+      // Verifica se o termo é diferente do último pesquisado
+      if (termo == _lastSearchTerm) {
+        return;
       }
-    } else {
-      resultados = [];
-    }
+
+      if (_isLoading) return;
+
+      if (termo.isNotEmpty) {
+        _setLoading(true);
+        print('Loading iniciado para termo: $termo');
+
+        try {
+          resultados = await buscar(termo);
+          _lastSearchTerm = termo; // Atualiza o último termo pesquisado
+          notifyListeners();
+        } catch (e) {
+          showError?.call('Erro ao buscar dados. Tente novamente.');
+        } finally {
+          _setLoading(false);
+        }
+      } else {
+        if (_lastSearchTerm.isNotEmpty) {
+          resultados = [];
+          _lastSearchTerm = '';
+          notifyListeners();
+        }
+      }
+    });
   }
 
   Future<List<Map<String, dynamic>>> buscar(String termo) async {
@@ -45,17 +63,23 @@ class BuscaController {
     }).toList();
   }
 
-  // Método para buscar os detalhes de um usuário específico
-  Future<Map<String, dynamic>> buscaDetalhesUsuario(String id) async {
-    final resultado = await Database.retornaDetalhesUsuario(
-        id); // Ou a consulta correspondente ao banco de dados
-    return resultado; // Aqui, verifica se o retorno inclui o id corretamente
+  void _setLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
   }
 
+  @override
   void dispose() {
+    _debounceTimer?.cancel();
     searchController.removeListener(_onSearchChanged);
     searchController.dispose();
+    super.dispose();
   }
 
   bool get isLoading => _isLoading;
+
+  Future<Map<String, dynamic>> buscaDetalhesUsuario(String id) async {
+    final resultado = await Database.retornaDetalhesUsuario(id);
+    return resultado;
+  }
 }
