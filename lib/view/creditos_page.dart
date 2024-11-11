@@ -103,7 +103,7 @@ class _CreditosPageState extends State<CreditosPage> {
     required String imagemPath,
   }) {
     return Card(
-      color: const Color.fromARGB(255, 243, 229, 208), // Cor bege claro
+      color: const Color.fromARGB(255, 243, 229, 208),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       elevation: 5,

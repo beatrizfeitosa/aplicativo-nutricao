@@ -158,6 +158,20 @@ class Database {
     return database.query('alimentos');
   }
 
+  static Future<List<Map<String, dynamic>>> retornaAlimentosPorId(
+      int id) async {
+    final database = await Database.database();
+
+    final List<Map<String, dynamic>> alimento = await database.query(
+      'alimentos',
+      columns: ['id', 'nome', 'tipo', 'categoria', 'foto', 'userId'],
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    return alimento;
+  }
+
   static Future<List<Map<String, dynamic>>> retornaAlimentosPorCategoria(
       String categoria) async {
     final database = await Database.database();
@@ -173,7 +187,6 @@ class Database {
     return alimentos;
   }
 
-  // Retorna detalhes de um cardápio específico pelo ID
   static Future<List<Map<String, dynamic>>> retornaCardapio(
       int cardapioId) async {
     final database = await Database.database();
@@ -185,20 +198,35 @@ class Database {
     );
   }
 
-  // Retorna alimentos associados a um cardápio específico
   static Future<List<Map<String, dynamic>>> retornaCardapioAlimentos(
       int cardapioId) async {
     final database = await Database.database();
 
-    // Fazendo uma consulta usando JOIN para pegar os alimentos associados ao cardápio
     final List<Map<String, dynamic>> alimentos = await database.rawQuery("""
-      SELECT a.id, a.nome, a.categoria, a.tipo 
+      SELECT a.id, a.nome, a.categoria, a.tipo, a.foto
       FROM cardapios_alimentos ca
       JOIN alimentos a ON ca.alimento_id = a.id
       WHERE ca.cardapio_id = ?
     """, [cardapioId]);
 
     return alimentos;
+  }
+
+  static Future<Map<String, dynamic>> retornaDetalhesUsuario(String id) async {
+    final database = await Database.database();
+
+    final List<Map<String, dynamic>> result = await database.query(
+      'usuarios',
+      where: 'id = ?',
+      whereArgs: [id],
+      limit: 1,
+    );
+
+    if (result.isNotEmpty) {
+      return result.first;
+    } else {
+      throw Exception('Usuário não encontrado');
+    }
   }
 
   static Future<List<Map<String, dynamic>>> buscaGeral(String termo) async {
