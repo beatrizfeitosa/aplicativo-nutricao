@@ -31,7 +31,6 @@ class _DetalharAlimentoPageState extends State<DetalharAlimentoPage> {
       }
       var alimento = alimentos.first;
 
-      // Chamada para buscar o nome do usuário usando o userId
       _nomeUsuario = _getNomeUsuario(alimento['userId']);
       return alimento;
     } catch (e) {

@@ -3,7 +3,7 @@ import 'package:aplicativo_nutricao/data/database_helper.dart';
 import 'dart:typed_data';
 
 class DetalharCardapioPage extends StatefulWidget {
-  final int cardapioId; // Alterando para int, já que seu id parece ser numérico
+  final int cardapioId;
 
   DetalharCardapioPage({required this.cardapioId});
 
@@ -17,7 +17,6 @@ class _DetalharCardapioPageState extends State<DetalharCardapioPage> {
   @override
   void initState() {
     super.initState();
-    // Usando a função existente para buscar os alimentos associados ao cardápio
     _alimentos = Database.retornaCardapioAlimentos(widget.cardapioId);
   }
 
@@ -56,7 +55,6 @@ class _DetalharCardapioPageState extends State<DetalharCardapioPage> {
     );
   }
 
-  // Widget para exibir cada alimento com suas informações
   Widget _buildAlimentoItem(Map<String, dynamic> alimento) {
     final String nome = alimento['nome'] ?? 'Nome desconhecido';
     final String categoria = alimento['categoria'] ?? 'Categoria desconhecida';
@@ -65,7 +63,27 @@ class _DetalharCardapioPageState extends State<DetalharCardapioPage> {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
-        leading: Icon(Icons.food_bank, size: 50, color: Colors.green),
+        leading:
+            // Foto do alimento
+            alimento['foto'] != null && alimento['foto'].isNotEmpty
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.memory(
+                      Uint8List.fromList(alimento['foto']),
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                : Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(Icons.image, color: Colors.white),
+                  ),
         title: Text(nome, style: TextStyle(fontWeight: FontWeight.bold)),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
